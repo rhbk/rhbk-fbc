@@ -38,7 +38,7 @@ tf_version="v0.1.0"
 # the required versions change.
 opm_filename="opm-$opm_version"
 yq_filename="yq-$yq_version"
-tf_filename="tf=$tf_version"
+tf_filename="tf-$tf_version"
 
 if ! [ -x "$opm_filename" ]
 then
