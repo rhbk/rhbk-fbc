@@ -152,14 +152,37 @@ EOF
 
 echo "=> Generating catalog for $operator_name" >&2
 
-echo "-> opm render"
+echo "-> opm render" >&2
 opm alpha render-template composite -f catalogs.yaml -c contributions.yaml
 
-echo "-> tap-fitter"
+echo "-> tap-fitter" >&2
 tap-fitter --catalog-path catalogs.yaml --composite-path contributions.yaml --provider "$operator_name"
 
-echo "-> Copying generated files"
-cp -rf "catalog/." "$catalog_dir"
+echo "-> Dockerfiles" >&2
+for ocp_ver in "${ocp_versions[@]}"
+do
+    cat > "catalog/$ocp_ver/catalog.Dockerfile" <<EOF
+# The base image is expected to contain
+# /bin/opm (with a serve subcommand) and /bin/grpc_health_probe
+FROM registry.redhat.io/openshift4/ose-operator-registry:$ocp_ver
+
+# Configure the entrypoint and command
+ENTRYPOINT ["/bin/opm"]
+CMD ["serve", "/configs", "--cache-dir=/tmp/cache"]
+
+# Copy declarative config root into image at /configs and pre-populate serve cache
+ADD catalog /configs
+RUN ["/bin/opm", "serve", "/configs", "--cache-dir=/tmp/cache", "--cache-only"]
+
+# Set DC-specific label for the location of the DC root directory
+# in the image
+LABEL operators.operatorframework.io.index.configs.v1=/configs
+EOF
+done
+
+echo "-> Copying generated files" >&2
+rm -rf "$catalog_dir/catalog"
+cp -r "catalog" "$catalog_dir"
 
 {
     echo ""
