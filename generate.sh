@@ -99,7 +99,6 @@ echo "=> Generating catalog configuration" >&2
 
 # TODO Determine this automatically somehow?
 ocp_versions=(
-    "v4.10"
     "v4.11"
     "v4.12"
     "v4.13"
