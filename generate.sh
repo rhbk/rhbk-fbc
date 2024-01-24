@@ -6,8 +6,7 @@ set -euo pipefail
 # Setup
 #
 
-cfg="$(readlink -e config.yaml)"
-if [ -z "$cfg" ]
+if ! cfg="$(readlink -e config.yaml)"
 then
     echo "Could not find config file $cfg" >&2
     exit 1
