@@ -6,6 +6,13 @@ set -euo pipefail
 # Setup
 #
 
+cfg="$(readlink -e config.yaml)"
+if [ -z "$cfg" ]
+then
+    echo "Could not find config file $cfg" >&2
+    exit 1
+fi
+
 echo "=> Setting up" >&2
 
 # Save starting dir as the place to put the catalog files
@@ -72,10 +79,24 @@ ln -fs "$tf_filename" tap-fitter
 
 cd "$work_dir"
 
-echo "=> Generating catalog configuration" >&2
+echo "=> Checking config" >&2
 
-# TODO Determine this from the repo somehow?
-operator_name="rhbk-operator"
+# Should be equal to .spec.name from the bundle CSVs
+operator_name="$(yq -e ea '.name' "$cfg")"
+
+# Assume the replacement with "bundle" in the name is the one we need to prefix
+# onto the bundle hashes listed in the config YAML.
+IFS=$'\t' read -r bundle_reg_from bundle_reg_to < <(yq -e -o tsv ea '.replacements[] | select(.from == "*bundle*") | [.from, .to]' "$cfg")
+
+# opm will need to access the images in this registry to do its work
+# https://source.redhat.com/groups/public/teamnado/wiki/brew_registry#obtaining-registry-tokens
+if ! podman login --get-login "$bundle_reg_from" >/dev/null
+then
+    echo "Login to $(cut -f1 -d/ <<<"$bundle_reg_from") before running this script" >&2
+    exit 125
+fi
+
+echo "=> Generating catalog configuration" >&2
 
 # TODO Determine this automatically somehow?
 ocp_versions=(
@@ -98,8 +119,12 @@ generateminorchannels: false
 stable:
   bundles:
 EOF
-    # Append the bundle image coordinates
-    xargs -a "$catalog_dir/bundles" printf '    - image: %s\n'
+    # Append the bundle image coordinates.
+    # We're using an initial "from" registry and switching it later because opm
+    # can't be configured with a mirror replacement policy, and some of these
+    # bundle images may currently be only present in the "from" registry, not
+    # the public "to" registry.
+    yq -e ea '.bundles | .[]' "$cfg" | xargs -n1 printf '    - image: %s@%s\n' "$bundle_reg_from"
 } > "$render_config"
 
 echo "-> Defining supported OCP versions" >&2
@@ -179,6 +204,15 @@ RUN ["/bin/opm", "serve", "/configs", "--cache-dir=/tmp/cache", "--cache-only"]
 LABEL operators.operatorframework.io.index.configs.v1=/configs
 EOF
 done
+
+echo "-> Replacing repositories" >&2
+# This step is required because opm doesn't support registry mirrors, and must
+# be able to see the images, so we have to give it the stage registry to work
+# with, and then replace the coordinates so they are valid public ones.
+while IFS=$'\t' read -r reg_from reg_to
+do
+    find catalog -type f | xargs sed -i "s|$reg_from|$reg_to|g"
+done < <(yq -e -o tsv ea '.replacements[] | [.from, .to]' "$cfg")
 
 echo "-> Copying generated files" >&2
 rm -rf "$catalog_dir/catalog"

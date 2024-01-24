@@ -1,0 +1,13 @@
+name: rhbk-operator
+replacements:
+  - from: brew.registry.redhat.io/rh-osbs/keycloak-rhbk-rhel9-operator-bundle
+    to: registry.redhat.io/rhbk/keycloak-operator-bundle
+  - from: brew.registry.redhat.io/rh-osbs/keycloak-rhbk-rhel9-operator
+    to: registry.redhat.io/rhbk/keycloak-rhel9-operator
+  - from: brew.registry.redhat.io/rh-osbs/keycloak-rhbk-openshift-rhel9
+    to: registry.redhat.io/rhbk/keycloak-rhel9
+bundles:
+  - sha256:b899d0714dfe48e0431ca41b7f68ac7e86594938d95765d62521b3a1117a5ba4
+  - sha256:d0e89da5092f3573e723ddbfbc4464fa5f965dcb989a836d5c9f7f10e026a7b4
+  - sha256:b80ba7050086caecee74fb40a90314faa90f053426d3250fd290c4b5fcfce8fa
+  - sha256:98a07cf517af29a93a91416a6b3fa5d8c4624b2595c78106845278ca296c32a5
