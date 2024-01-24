@@ -7,13 +7,13 @@ metadata:
     build.appstudio.redhat.com/target_branch: '{{target_branch}}'
     pipelinesascode.tekton.dev/max-keep-runs: "3"
     pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch
-      == "main"
+      == "main" && ( "catalog/v4.14/***".pathChanged() || ".tekton/fbc-v4-14-pull-request.yaml".pathChanged() )
   creationTimestamp: null
   labels:
     appstudio.openshift.io/application: rhbk-fbc
-    appstudio.openshift.io/component: fbc-v4-15
+    appstudio.openshift.io/component: fbc-v4-14
     pipelines.appstudio.openshift.io/type: build
-  name: fbc-v4-15-on-push
+  name: fbc-v4-14-on-push
   namespace: rhbk-release-tenant
 spec:
   params:
@@ -22,9 +22,9 @@ spec:
   - name: git-url
     value: '{{source_url}}'
   - name: output-image
-    value: quay.io/redhat-user-workloads/rhbk-release-tenant/rhbk-fbc/fbc-v4-15:{{revision}}
+    value: quay.io/redhat-user-workloads/rhbk-release-tenant/rhbk-fbc/fbc-v4-14:{{revision}}
   - name: path-context
-    value: catalog/v4.15
+    value: catalog/v4.14
   - name: revision
     value: '{{revision}}'
   pipelineSpec:
