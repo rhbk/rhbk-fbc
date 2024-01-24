@@ -104,7 +104,6 @@ ocp_versions=(
     "v4.12"
     "v4.13"
     "v4.14"
-    "v4.15"
 )
 
 echo "-> Applying bundle image list" >&2
