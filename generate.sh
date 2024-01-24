@@ -184,6 +184,7 @@ tap-fitter --catalog-path catalogs.yaml --composite-path contributions.yaml --pr
 echo "-> Dockerfiles" >&2
 for ocp_ver in "${ocp_versions[@]}"
 do
+    # Soon this might be able to be simplified, as "binaryless" container, FROM scratch
     cat > "catalog/$ocp_ver/catalog.Dockerfile" <<EOF
 # The base image is expected to contain
 # /bin/opm (with a serve subcommand) and /bin/grpc_health_probe
@@ -194,7 +195,7 @@ ENTRYPOINT ["/bin/opm"]
 CMD ["serve", "/configs", "--cache-dir=/tmp/cache"]
 
 # Copy declarative config root into image at /configs and pre-populate serve cache
-ADD catalog /configs
+ADD $operator_name /configs/$operator_name
 RUN ["/bin/opm", "serve", "/configs", "--cache-dir=/tmp/cache", "--cache-only"]
 
 # Set DC-specific label for the location of the DC root directory
