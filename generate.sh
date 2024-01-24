@@ -197,7 +197,7 @@ LABEL operators.operatorframework.io.index.configs.v1=/configs
 EOF
 done
 
-echo "-> Replacing repositories" >&2
+echo "-> Replacing registries" >&2
 # This step is required because opm doesn't support registry mirrors, and must
 # be able to see the images, so we have to give it the stage registry to work
 # with, and then replace the coordinates so they are valid public ones.
