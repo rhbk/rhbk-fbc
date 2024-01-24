@@ -169,7 +169,7 @@
     "schema": "olm.bundle",
     "name": "rhbk-operator.v22.0.7-opr.1",
     "package": "rhbk-operator",
-    "image": "registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:95af3ba537cf925f0359d54c7cd6d1dc360c9f109dcdd79322e9eb981c9b1ec6",
+    "image": "registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:d0e89da5092f3573e723ddbfbc4464fa5f965dcb989a836d5c9f7f10e026a7b4",
     "properties": [
         {
             "type": "olm.gvk",
@@ -291,7 +291,7 @@
     "relatedImages": [
         {
             "name": "",
-            "image": "registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:95af3ba537cf925f0359d54c7cd6d1dc360c9f109dcdd79322e9eb981c9b1ec6"
+            "image": "registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:d0e89da5092f3573e723ddbfbc4464fa5f965dcb989a836d5c9f7f10e026a7b4"
         },
         {
             "name": "keycloak-rhel9-operator-68cc1670c446d8a7876e1536faa4a8e7c5bed0d175cd31307f60f7afd0b7833f-annotation",
@@ -311,7 +311,7 @@
     "schema": "olm.bundle",
     "name": "rhbk-operator.v22.0.8-opr.1",
     "package": "rhbk-operator",
-    "image": "registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:47323bf5e0d1ec70bfec6d7dd476d1076d879d26cc166af451579e79a56046ec",
+    "image": "registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:b80ba7050086caecee74fb40a90314faa90f053426d3250fd290c4b5fcfce8fa",
     "properties": [
         {
             "type": "olm.gvk",
@@ -433,7 +433,7 @@
     "relatedImages": [
         {
             "name": "",
-            "image": "registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:47323bf5e0d1ec70bfec6d7dd476d1076d879d26cc166af451579e79a56046ec"
+            "image": "registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:b80ba7050086caecee74fb40a90314faa90f053426d3250fd290c4b5fcfce8fa"
         },
         {
             "name": "keycloak-rhel9-operator-9f1f57b7cf537ba99882af9ad556beb9aa98757f710a5c4f36159622ea511b64-annotation",
