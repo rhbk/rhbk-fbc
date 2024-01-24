@@ -1,4 +1,9 @@
 name: rhbk-operator
+ocp:
+  - v4.11
+  - v4.12
+  - v4.13
+  - v4.14
 replacements:
   - from: brew.registry.redhat.io/rh-osbs/keycloak-rhbk-rhel9-operator-bundle
     to: registry.redhat.io/rhbk/keycloak-operator-bundle

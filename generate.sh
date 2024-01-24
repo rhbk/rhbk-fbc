@@ -95,15 +95,9 @@ then
     exit 125
 fi
 
-echo "=> Generating catalog configuration" >&2
+readarray ocp_versions < <(yq -e ea '.ocp[]' "$cfg")
 
-# TODO Determine this automatically somehow?
-ocp_versions=(
-    "v4.11"
-    "v4.12"
-    "v4.13"
-    "v4.14"
-)
+echo "=> Generating catalog configuration" >&2
 
 echo "-> Applying bundle image list" >&2
 render_config="semver-template.yaml"
