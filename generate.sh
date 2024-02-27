@@ -95,7 +95,7 @@ then
     exit 125
 fi
 
-readarray ocp_versions < <(yq -e ea '.ocp[]' "$cfg")
+readarray -t ocp_versions < <(yq -e ea '.ocp[]' "$cfg")
 
 echo "=> Generating catalog configuration" >&2
 
