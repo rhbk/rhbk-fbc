@@ -178,7 +178,7 @@ echo "-> Dockerfiles" >&2
 for ocp_ver in "${ocp_versions[@]}"
 do
     # Soon this might be able to be simplified, as "binaryless" container, FROM scratch
-    cat > "catalog/$ocp_ver/catalog.Dockerfile" <<EOF
+    cat > "catalog/$ocp_ver/Dockerfile" <<EOF
 # The base image is expected to contain
 # /bin/opm (with a serve subcommand) and /bin/grpc_health_probe
 FROM registry.redhat.io/openshift4/ose-operator-registry:$ocp_ver
