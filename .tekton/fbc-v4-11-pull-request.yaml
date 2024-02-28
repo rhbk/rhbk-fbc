@@ -367,6 +367,78 @@ spec:
         operator: in
         values:
         - "false"
+    - name: inspect-image
+      params:
+      - name: IMAGE_URL
+        value: $(tasks.build-container.results.IMAGE_URL)
+      - name: IMAGE_DIGEST
+        value: $(tasks.build-container.results.IMAGE_DIGEST)
+      runAfter:
+      - build-container
+      taskRef:
+        params:
+        - name: name
+          value: inspect-image
+        - name: bundle
+          value: quay.io/redhat-appstudio-tekton-catalog/task-inspect-image:0.1@sha256:9aa6f81ec6deba67db77d60be661a00f7fad6a2d633db7ddba8878ca2d16af0e
+        - name: kind
+          value: task
+        resolver: bundles
+      when:
+      - input: $(params.skip-checks)
+        operator: in
+        values:
+        - "false"
+      workspaces:
+      - name: source
+        workspace: workspace
+    - name: fbc-validate
+      params:
+      - name: IMAGE_URL
+        value: $(tasks.build-container.results.IMAGE_URL)
+      - name: IMAGE_DIGEST
+        value: $(tasks.build-container.results.IMAGE_DIGEST)
+      - name: BASE_IMAGE
+        value: $(tasks.inspect-image.results.BASE_IMAGE)
+      runAfter:
+      - inspect-image
+      taskRef:
+        params:
+        - name: name
+          value: fbc-validation
+        - name: bundle
+          value: quay.io/redhat-appstudio-tekton-catalog/task-fbc-validation:0.1@sha256:38572685ce14ed4f833f6951b296ac037b497450eadd65504ac27757a88afd33
+        - name: kind
+          value: task
+        resolver: bundles
+      when:
+      - input: $(params.skip-checks)
+        operator: in
+        values:
+        - "false"
+      workspaces:
+      - name: workspace
+        workspace: workspace
+    - name: fbc-related-image-check
+      runAfter:
+      - fbc-validate
+      taskRef:
+        params:
+        - name: name
+          value: fbc-related-image-check
+        - name: bundle
+          value: quay.io/redhat-appstudio-tekton-catalog/task-fbc-related-image-check:0.1@sha256:2d804d38f6724bcc53c4828aa72bc4e7401e0a561dea2ea4a4ba39c782a150a6
+        - name: kind
+          value: task
+        resolver: bundles
+      when:
+      - input: $(params.skip-checks)
+        operator: in
+        values:
+        - "false"
+      workspaces:
+      - name: workspace
+        workspace: workspace
     workspaces:
     - name: workspace
     - name: git-auth
