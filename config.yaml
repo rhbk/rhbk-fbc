@@ -1,4 +1,8 @@
 name: rhbk-operator
+konflux:
+  namespace: rhbk-release
+  prefix: rhbk-fbc
+  github: rhbk/rhbk-fbc
 ocp:
   - v4.11
   - v4.12
