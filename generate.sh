@@ -174,7 +174,7 @@ opm alpha render-template composite -f catalogs.yaml -c contributions.yaml
 echo "-> tap-fitter" >&2
 tap-fitter --catalog-path catalogs.yaml --composite-path contributions.yaml --provider "$operator_name"
 
-echo "-> Dockerfiles" >&2
+echo "-> Dockerfiles + devfiles" >&2
 for ocp_ver in "${ocp_versions[@]}"
 do
     # Soon this might be able to be simplified, as "binaryless" container, FROM scratch
@@ -195,6 +195,25 @@ RUN ["/bin/opm", "serve", "/configs", "--cache-dir=/tmp/cache", "--cache-only"]
 # in the image
 LABEL operators.operatorframework.io.index.configs.v1=/configs
 EOF
+
+    devfile="catalog/$ocp_ver/devfile.yaml"
+    yq -i e '.metadata.name = "fbc-" + .metadata.name' "$devfile"
+    yq -i e '.metadata.displayName = "FBC " + .metadata.displayName' "$devfile"
+    yq -i e '.metadata.provider = "Red Hat"' "$devfile"
+    yq -i e 'with(.components | .[] | select(.name == "image-build") ;
+                .image.imageName = "" |
+                .image.dockerfile.uri = "Dockerfile" |
+                .image.dockerfile.buildContext = ""
+            )' "$devfile"
+    yq -i e '.components += {"name": "kubernetes"}' "$devfile"
+    yq -i e 'with(.components | .[] | select(.name == "kubernetes") ;
+                .kubernetes.inlined = "placeholder" |
+                .attributes."deployment/container-port" = 50051 |
+                .attributes."deployment/cpuRequest" = "100m" |
+                .attributes."deployment/memoryRequest" = "512Mi" |
+                .attributes."deployment/replicas" = 1 |
+                .attributes."deployment/storageRequest" = "0"
+            )' "$devfile"
 done
 
 echo "-> Replacing registries" >&2
