@@ -84,7 +84,7 @@ cat > "$kubectl_cfg" <<EOF
 apiVersion: v1
 clusters:
 - cluster:
-    server: https://api-toolchain-host-operator.apps.stone-prd-host1.wdlc.p1.openshiftapps.com/workspaces/rhbk-release
+    server: https://api-toolchain-host-operator.apps.stone-prd-host1.wdlc.p1.openshiftapps.com/workspaces/$namespace
   name: appstudio
 contexts:
 - context:
