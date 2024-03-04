@@ -181,8 +181,7 @@ spec:
             value: $(params.image-expires-after)
           - name: COMMIT_SHA
             value: $(tasks.clone-repository.results.commit)
-        runAfter:
-          - prefetch-dependencies
+        runAfter: []
         taskRef:
           params:
             - name: name
