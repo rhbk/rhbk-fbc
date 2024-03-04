@@ -181,7 +181,7 @@ spec:
       name: application
   params:
     - name: POLICY_CONFIGURATION
-      value: $namespace-tenant/fbc-standard
+      value: rhtap-releng-tenant/fbc-standard
   resolverRef:
     params:
       - name: url
@@ -196,42 +196,6 @@ EOF
 
     cd ..
 done < <(find "$origin_dir/catalog" -maxdepth 1 -type d -name 'v*')
-
-echo "  -> fbc-standard" >&2
-# EnterpriseContractPolicy (1 per namespace)
-{ cat <<EOF
-apiVersion: appstudio.redhat.com/v1alpha1
-kind: EnterpriseContractPolicy
-metadata:
-  name: fbc-standard
-  namespace: $namespace-tenant
-spec:
-  configuration:
-    include:
-      - '@redhat'
-    exclude:
-      # The release process separates the catalog from the binaries,
-      # so CVEs are the responsibility of the OLM team
-      - cve
-      - step_image_registries
-      # prefetch is not required
-      - tasks.required_tasks_found:prefetch-dependencies
-      # source containers are not required
-      - tasks.required_tasks_found:source-build
-      # summary being skipped due to missing task parameter from source build
-      # since source builds are skipped
-      - tasks.required_tasks_found:summary
-  description: 'Includes rules for shipping Red Hat FBC fragments'
-  publicKey: 'k8s://openshift-pipelines/public-key'
-  sources:
-    - name: Release Policies
-      data:
-        - github.com/release-engineering/rhtap-ec-policy//data
-        - oci::quay.io/redhat-appstudio-tekton-catalog/data-acceptable-bundles:latest
-      policy:
-        - oci::quay.io/enterprise-contract/ec-release-policy:latest
-EOF
-} > enterprisecontractpolicy.yaml
 
 #
 # kubectl
@@ -254,9 +218,6 @@ fi
 
 echo "=> Your browser may open for authentication, if required" >&2
 echo "=> Applying Konflux config via kubectl" >&2
-
-echo "  -> fbc-standard" >&2
-kubectl --kubeconfig="$kubectl_cfg" apply -f "enterprisecontractpolicy.yaml"
 
 while read -r ocp_dir
 do
