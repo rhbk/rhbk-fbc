@@ -252,6 +252,19 @@ else
     exit 3
 fi
 
-echo "=> Your browser may open for authentication if required" >&2
+echo "=> Your browser may open for authentication, if required" >&2
 echo "=> Applying Konflux config via kubectl" >&2
-#kubectl --kubeconfig="$kubectl_cfg" apply -f TODO.yaml
+
+echo "  -> fbc-standard" >&2
+kubectl --kubeconfig="$kubectl_cfg" apply -f "enterprisecontractpolicy.yaml"
+
+while read -r ocp_dir
+do
+    echo "  -> $(basename "$ocp_dir")" >&2
+    for yaml in application.yaml component.yaml integrationtestscenario.yaml
+    do
+        kubectl --kubeconfig="$kubectl_cfg" apply -f "$ocp_dir/$yaml"
+    done
+done < <(find "$work_dir" -maxdepth 1 -type d -name 'v*')
+
+echo "=> Done" >&2
