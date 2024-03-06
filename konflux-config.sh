@@ -181,7 +181,7 @@ spec:
       name: application
   params:
     - name: POLICY_CONFIGURATION
-      value: rhtap-releng-tenant/fbc-standard
+      value: rhtap-releng-tenant/fbc-stage
   resolverRef:
     params:
       - name: url
