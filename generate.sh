@@ -169,7 +169,7 @@ EOF
 echo "=> Generating catalog for $operator_name" >&2
 
 echo "-> opm render" >&2
-opm alpha render-template composite -f catalogs.yaml -c contributions.yaml
+opm alpha render-template composite -o yaml -f catalogs.yaml -c contributions.yaml
 
 echo "-> tap-fitter" >&2
 tap-fitter --catalog-path catalogs.yaml --composite-path contributions.yaml --provider "$operator_name"

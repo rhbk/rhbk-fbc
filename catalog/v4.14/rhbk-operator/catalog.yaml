@@ -1,752 +1,683 @@
-{
-    "schema": "olm.package",
-    "name": "rhbk-operator",
-    "defaultChannel": "stable-v22"
-}
-{
-    "schema": "olm.channel",
-    "name": "stable-v22",
-    "package": "rhbk-operator",
-    "entries": [
-        {
-            "name": "rhbk-operator.v22.0.6-opr.1"
-        },
-        {
-            "name": "rhbk-operator.v22.0.7-opr.1"
-        },
-        {
-            "name": "rhbk-operator.v22.0.8-opr.1"
-        },
-        {
-            "name": "rhbk-operator.v22.0.8-opr.2"
-        },
-        {
-            "name": "rhbk-operator.v22.0.9-opr.1",
-            "skips": [
-                "rhbk-operator.v22.0.6-opr.1",
-                "rhbk-operator.v22.0.7-opr.1",
-                "rhbk-operator.v22.0.8-opr.1",
-                "rhbk-operator.v22.0.8-opr.2"
-            ]
-        }
-    ]
-}
-{
-    "schema": "olm.bundle",
-    "name": "rhbk-operator.v22.0.6-opr.1",
-    "package": "rhbk-operator",
-    "image": "registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:b899d0714dfe48e0431ca41b7f68ac7e86594938d95765d62521b3a1117a5ba4",
-    "properties": [
-        {
-            "type": "olm.gvk",
-            "value": {
-                "group": "k8s.keycloak.org",
-                "kind": "Keycloak",
-                "version": "v2alpha1"
+---
+defaultChannel: stable-v22
+name: rhbk-operator
+schema: olm.package
+---
+entries:
+- name: rhbk-operator.v22.0.6-opr.1
+- name: rhbk-operator.v22.0.7-opr.1
+- name: rhbk-operator.v22.0.8-opr.1
+- name: rhbk-operator.v22.0.8-opr.2
+- name: rhbk-operator.v22.0.9-opr.1
+  skips:
+  - rhbk-operator.v22.0.6-opr.1
+  - rhbk-operator.v22.0.7-opr.1
+  - rhbk-operator.v22.0.8-opr.1
+  - rhbk-operator.v22.0.8-opr.2
+name: stable-v22
+package: rhbk-operator
+schema: olm.channel
+---
+image: registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:b899d0714dfe48e0431ca41b7f68ac7e86594938d95765d62521b3a1117a5ba4
+name: rhbk-operator.v22.0.6-opr.1
+package: rhbk-operator
+properties:
+- type: olm.gvk
+  value:
+    group: k8s.keycloak.org
+    kind: Keycloak
+    version: v2alpha1
+- type: olm.gvk
+  value:
+    group: k8s.keycloak.org
+    kind: KeycloakRealmImport
+    version: v2alpha1
+- type: olm.package
+  value:
+    packageName: rhbk-operator
+    version: 22.0.6-opr.1
+- type: olm.csv.metadata
+  value:
+    annotations:
+      alm-examples: |-
+        [
+          {
+            "apiVersion": "k8s.keycloak.org/v2alpha1",
+            "kind": "Keycloak",
+            "metadata": {
+              "name": "example-keycloak",
+              "labels": {
+                "app": "sso"
+              }
+            },
+            "spec": {
+              "instances": 1,
+              "hostname": "example.org",
+              "tlsSecret": "my-tls-secret"
             }
-        },
-        {
-            "type": "olm.gvk",
-            "value": {
-                "group": "k8s.keycloak.org",
-                "kind": "KeycloakRealmImport",
-                "version": "v2alpha1"
+          },
+          {
+            "apiVersion": "k8s.keycloak.org/v2alpha1",
+            "kind": "KeycloakRealmImport",
+            "metadata": {
+              "name": "example-keycloak-realm-import",
+              "labels": {
+                "app": "sso"
+              }
+            },
+            "spec": {
+              "keycloakCRName": "example-keycloak",
+              "realm": {}
             }
-        },
-        {
-            "type": "olm.package",
-            "value": {
-                "packageName": "rhbk-operator",
-                "version": "22.0.6-opr.1"
+          }
+        ]
+      capabilities: Deep Insights
+      categories: Security
+      certified: "false"
+      containerImage: registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:f35cd3737886cce077d98ce205e84f1199449bf4925362da140c91cdec8537af
+      createdAt: 11/09/23 00:13:34
+      description: An Operator for installing and managing Keycloak
+      olm.skipRange: '>=1.0.0 <22.0.6-opr.1'
+      operators.openshift.io/infrastructure-features: '["Disconnected"]'
+      operators.openshift.io/valid-subscription: '["OpenShift Container Platform",
+        "OpenShift Platform Plus"]'
+      repository: https://github.com/keycloak/keycloak
+      support: Red Hat
+    apiServiceDefinitions: {}
+    crdDescriptions:
+      owned:
+      - description: Represents a Keycloak Realm Import
+        displayName: KeycloakRealmImport
+        kind: KeycloakRealmImport
+        name: keycloakrealmimports.k8s.keycloak.org
+        version: v2alpha1
+      - description: Represents a Keycloak Instance
+        displayName: Keycloak
+        kind: Keycloak
+        name: keycloaks.k8s.keycloak.org
+        version: v2alpha1
+    description: |
+      A Kubernetes Operator based on the Operator SDK for installing and managing Keycloak.
+
+      Keycloak lets you add authentication to applications and secure services with minimum fuss. No need to deal with storing users or authenticating users. It's all available out of the box.
+
+      The operator can deploy and manage Keycloak instances on Kubernetes and OpenShift.
+      The following features are supported:
+
+      * Install Keycloak to a namespace
+      * Import Keycloak Realms
+    displayName: Keycloak Operator
+    installModes:
+    - supported: true
+      type: OwnNamespace
+    - supported: true
+      type: SingleNamespace
+    - supported: false
+      type: MultiNamespace
+    - supported: false
+      type: AllNamespaces
+    keywords:
+    - Keycloak
+    - Identity
+    - Access
+    labels:
+      operatorframework.io/arch.amd64: supported
+      operatorframework.io/arch.ppc64le: supported
+      operatorframework.io/arch.s390x: supported
+      operatorframework.io/os.linux: supported
+    links:
+    - name: Documentation
+      url: https://www.keycloak.org/guides#operator
+    - name: Keycloak
+      url: https://www.keycloak.org/
+    - name: Keycloak Discourse
+      url: https://keycloak.discourse.group/
+    maintainers:
+    - email: keycloak-dev@googlegroups.com
+      name: Keycloak DEV mailing list
+    maturity: stable
+    provider:
+      name: Red Hat
+relatedImages:
+- image: registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:b899d0714dfe48e0431ca41b7f68ac7e86594938d95765d62521b3a1117a5ba4
+  name: ""
+- image: registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:f35cd3737886cce077d98ce205e84f1199449bf4925362da140c91cdec8537af
+  name: keycloak-rhel9-operator-f35cd3737886cce077d98ce205e84f1199449bf4925362da140c91cdec8537af-annotation
+- image: registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:f35cd3737886cce077d98ce205e84f1199449bf4925362da140c91cdec8537af
+  name: rhbk-operator
+- image: registry.redhat.io/rhbk/keycloak-rhel9@sha256:167d58278da388ef82a993e1396389bf2c614b75475ccefbc8050b18221f0a36
+  name: keycloak
+schema: olm.bundle
+---
+image: registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:d0e89da5092f3573e723ddbfbc4464fa5f965dcb989a836d5c9f7f10e026a7b4
+name: rhbk-operator.v22.0.7-opr.1
+package: rhbk-operator
+properties:
+- type: olm.gvk
+  value:
+    group: k8s.keycloak.org
+    kind: Keycloak
+    version: v2alpha1
+- type: olm.gvk
+  value:
+    group: k8s.keycloak.org
+    kind: KeycloakRealmImport
+    version: v2alpha1
+- type: olm.package
+  value:
+    packageName: rhbk-operator
+    version: 22.0.7-opr.1
+- type: olm.csv.metadata
+  value:
+    annotations:
+      alm-examples: |-
+        [
+          {
+            "apiVersion": "k8s.keycloak.org/v2alpha1",
+            "kind": "Keycloak",
+            "metadata": {
+              "name": "example-keycloak",
+              "labels": {
+                "app": "sso"
+              }
+            },
+            "spec": {
+              "instances": 1,
+              "hostname": "example.org",
+              "tlsSecret": "my-tls-secret"
             }
-        },
-        {
-            "type": "olm.csv.metadata",
-            "value": {
-                "annotations": {
-                    "alm-examples": "[\n  {\n    \"apiVersion\": \"k8s.keycloak.org/v2alpha1\",\n    \"kind\": \"Keycloak\",\n    \"metadata\": {\n      \"name\": \"example-keycloak\",\n      \"labels\": {\n        \"app\": \"sso\"\n      }\n    },\n    \"spec\": {\n      \"instances\": 1,\n      \"hostname\": \"example.org\",\n      \"tlsSecret\": \"my-tls-secret\"\n    }\n  },\n  {\n    \"apiVersion\": \"k8s.keycloak.org/v2alpha1\",\n    \"kind\": \"KeycloakRealmImport\",\n    \"metadata\": {\n      \"name\": \"example-keycloak-realm-import\",\n      \"labels\": {\n        \"app\": \"sso\"\n      }\n    },\n    \"spec\": {\n      \"keycloakCRName\": \"example-keycloak\",\n      \"realm\": {}\n    }\n  }\n]",
-                    "capabilities": "Deep Insights",
-                    "categories": "Security",
-                    "certified": "false",
-                    "containerImage": "registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:f35cd3737886cce077d98ce205e84f1199449bf4925362da140c91cdec8537af",
-                    "createdAt": "11/09/23 00:13:34",
-                    "description": "An Operator for installing and managing Keycloak",
-                    "olm.skipRange": ">=1.0.0 <22.0.6-opr.1",
-                    "operators.openshift.io/infrastructure-features": "[\"Disconnected\"]",
-                    "operators.openshift.io/valid-subscription": "[\"OpenShift Container Platform\", \"OpenShift Platform Plus\"]",
-                    "repository": "https://github.com/keycloak/keycloak",
-                    "support": "Red Hat"
-                },
-                "apiServiceDefinitions": {},
-                "crdDescriptions": {
-                    "owned": [
-                        {
-                            "name": "keycloakrealmimports.k8s.keycloak.org",
-                            "version": "v2alpha1",
-                            "kind": "KeycloakRealmImport",
-                            "displayName": "KeycloakRealmImport",
-                            "description": "Represents a Keycloak Realm Import"
-                        },
-                        {
-                            "name": "keycloaks.k8s.keycloak.org",
-                            "version": "v2alpha1",
-                            "kind": "Keycloak",
-                            "displayName": "Keycloak",
-                            "description": "Represents a Keycloak Instance"
-                        }
-                    ]
-                },
-                "description": "A Kubernetes Operator based on the Operator SDK for installing and managing Keycloak.\n\nKeycloak lets you add authentication to applications and secure services with minimum fuss. No need to deal with storing users or authenticating users. It's all available out of the box.\n\nThe operator can deploy and manage Keycloak instances on Kubernetes and OpenShift.\nThe following features are supported:\n\n* Install Keycloak to a namespace\n* Import Keycloak Realms\n",
-                "displayName": "Keycloak Operator",
-                "installModes": [
-                    {
-                        "type": "OwnNamespace",
-                        "supported": true
-                    },
-                    {
-                        "type": "SingleNamespace",
-                        "supported": true
-                    },
-                    {
-                        "type": "MultiNamespace",
-                        "supported": false
-                    },
-                    {
-                        "type": "AllNamespaces",
-                        "supported": false
-                    }
-                ],
-                "keywords": [
-                    "Keycloak",
-                    "Identity",
-                    "Access"
-                ],
-                "labels": {
-                    "operatorframework.io/arch.amd64": "supported",
-                    "operatorframework.io/arch.ppc64le": "supported",
-                    "operatorframework.io/arch.s390x": "supported",
-                    "operatorframework.io/os.linux": "supported"
-                },
-                "links": [
-                    {
-                        "name": "Documentation",
-                        "url": "https://www.keycloak.org/guides#operator"
-                    },
-                    {
-                        "name": "Keycloak",
-                        "url": "https://www.keycloak.org/"
-                    },
-                    {
-                        "name": "Keycloak Discourse",
-                        "url": "https://keycloak.discourse.group/"
-                    }
-                ],
-                "maintainers": [
-                    {
-                        "name": "Keycloak DEV mailing list",
-                        "email": "keycloak-dev@googlegroups.com"
-                    }
-                ],
-                "maturity": "stable",
-                "provider": {
-                    "name": "Red Hat"
-                }
+          },
+          {
+            "apiVersion": "k8s.keycloak.org/v2alpha1",
+            "kind": "KeycloakRealmImport",
+            "metadata": {
+              "name": "example-keycloak-realm-import",
+              "labels": {
+                "app": "sso"
+              }
+            },
+            "spec": {
+              "keycloakCRName": "example-keycloak",
+              "realm": {}
             }
-        }
-    ],
-    "relatedImages": [
-        {
-            "name": "",
-            "image": "registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:b899d0714dfe48e0431ca41b7f68ac7e86594938d95765d62521b3a1117a5ba4"
-        },
-        {
-            "name": "keycloak-rhel9-operator-f35cd3737886cce077d98ce205e84f1199449bf4925362da140c91cdec8537af-annotation",
-            "image": "registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:f35cd3737886cce077d98ce205e84f1199449bf4925362da140c91cdec8537af"
-        },
-        {
-            "name": "rhbk-operator",
-            "image": "registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:f35cd3737886cce077d98ce205e84f1199449bf4925362da140c91cdec8537af"
-        },
-        {
-            "name": "keycloak",
-            "image": "registry.redhat.io/rhbk/keycloak-rhel9@sha256:167d58278da388ef82a993e1396389bf2c614b75475ccefbc8050b18221f0a36"
-        }
-    ]
-}
-{
-    "schema": "olm.bundle",
-    "name": "rhbk-operator.v22.0.7-opr.1",
-    "package": "rhbk-operator",
-    "image": "registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:d0e89da5092f3573e723ddbfbc4464fa5f965dcb989a836d5c9f7f10e026a7b4",
-    "properties": [
-        {
-            "type": "olm.gvk",
-            "value": {
-                "group": "k8s.keycloak.org",
-                "kind": "Keycloak",
-                "version": "v2alpha1"
+          }
+        ]
+      capabilities: Deep Insights
+      categories: Security
+      certified: "false"
+      containerImage: registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:68cc1670c446d8a7876e1536faa4a8e7c5bed0d175cd31307f60f7afd0b7833f
+      createdAt: 12/11/23 17:35:55
+      description: An Operator for installing and managing Keycloak
+      olm.skipRange: '>=1.0.0 <22.0.7-opr.1'
+      operators.openshift.io/infrastructure-features: '["Disconnected"]'
+      operators.openshift.io/valid-subscription: '["OpenShift Container Platform",
+        "OpenShift Platform Plus"]'
+      repository: https://github.com/keycloak/keycloak
+      support: Red Hat
+    apiServiceDefinitions: {}
+    crdDescriptions:
+      owned:
+      - description: Represents a Keycloak Realm Import
+        displayName: KeycloakRealmImport
+        kind: KeycloakRealmImport
+        name: keycloakrealmimports.k8s.keycloak.org
+        version: v2alpha1
+      - description: Represents a Keycloak Instance
+        displayName: Keycloak
+        kind: Keycloak
+        name: keycloaks.k8s.keycloak.org
+        version: v2alpha1
+    description: |
+      A Kubernetes Operator based on the Operator SDK for installing and managing Keycloak.
+
+      Keycloak lets you add authentication to applications and secure services with minimum fuss. No need to deal with storing users or authenticating users. It's all available out of the box.
+
+      The operator can deploy and manage Keycloak instances on Kubernetes and OpenShift.
+      The following features are supported:
+
+      * Install Keycloak to a namespace
+      * Import Keycloak Realms
+    displayName: Keycloak Operator
+    installModes:
+    - supported: true
+      type: OwnNamespace
+    - supported: true
+      type: SingleNamespace
+    - supported: false
+      type: MultiNamespace
+    - supported: false
+      type: AllNamespaces
+    keywords:
+    - Keycloak
+    - Identity
+    - Access
+    labels:
+      operatorframework.io/arch.amd64: supported
+      operatorframework.io/arch.ppc64le: supported
+      operatorframework.io/arch.s390x: supported
+      operatorframework.io/os.linux: supported
+    links:
+    - name: Documentation
+      url: https://www.keycloak.org/guides#operator
+    - name: Keycloak
+      url: https://www.keycloak.org/
+    - name: Keycloak Discourse
+      url: https://keycloak.discourse.group/
+    maintainers:
+    - email: keycloak-dev@googlegroups.com
+      name: Keycloak DEV mailing list
+    maturity: stable
+    provider:
+      name: Red Hat
+relatedImages:
+- image: registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:d0e89da5092f3573e723ddbfbc4464fa5f965dcb989a836d5c9f7f10e026a7b4
+  name: ""
+- image: registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:68cc1670c446d8a7876e1536faa4a8e7c5bed0d175cd31307f60f7afd0b7833f
+  name: keycloak-rhel9-operator-68cc1670c446d8a7876e1536faa4a8e7c5bed0d175cd31307f60f7afd0b7833f-annotation
+- image: registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:68cc1670c446d8a7876e1536faa4a8e7c5bed0d175cd31307f60f7afd0b7833f
+  name: rhbk-operator
+- image: registry.redhat.io/rhbk/keycloak-rhel9@sha256:d18adf0219a17b6619ddfb86a7d569019481f0315d94917793038ba5c6dc9567
+  name: keycloak
+schema: olm.bundle
+---
+image: registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:b80ba7050086caecee74fb40a90314faa90f053426d3250fd290c4b5fcfce8fa
+name: rhbk-operator.v22.0.8-opr.1
+package: rhbk-operator
+properties:
+- type: olm.gvk
+  value:
+    group: k8s.keycloak.org
+    kind: Keycloak
+    version: v2alpha1
+- type: olm.gvk
+  value:
+    group: k8s.keycloak.org
+    kind: KeycloakRealmImport
+    version: v2alpha1
+- type: olm.package
+  value:
+    packageName: rhbk-operator
+    version: 22.0.8-opr.1
+- type: olm.csv.metadata
+  value:
+    annotations:
+      alm-examples: |-
+        [
+          {
+            "apiVersion": "k8s.keycloak.org/v2alpha1",
+            "kind": "Keycloak",
+            "metadata": {
+              "name": "example-keycloak",
+              "labels": {
+                "app": "sso"
+              }
+            },
+            "spec": {
+              "instances": 1,
+              "hostname": "example.org",
+              "tlsSecret": "my-tls-secret"
             }
-        },
-        {
-            "type": "olm.gvk",
-            "value": {
-                "group": "k8s.keycloak.org",
-                "kind": "KeycloakRealmImport",
-                "version": "v2alpha1"
+          },
+          {
+            "apiVersion": "k8s.keycloak.org/v2alpha1",
+            "kind": "KeycloakRealmImport",
+            "metadata": {
+              "name": "example-keycloak-realm-import",
+              "labels": {
+                "app": "sso"
+              }
+            },
+            "spec": {
+              "keycloakCRName": "example-keycloak",
+              "realm": {}
             }
-        },
-        {
-            "type": "olm.package",
-            "value": {
-                "packageName": "rhbk-operator",
-                "version": "22.0.7-opr.1"
+          }
+        ]
+      capabilities: Deep Insights
+      categories: Security
+      certified: "false"
+      containerImage: registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:9f1f57b7cf537ba99882af9ad556beb9aa98757f710a5c4f36159622ea511b64
+      createdAt: 01/04/24 18:19:37
+      description: An Operator for installing and managing Keycloak
+      olm.skipRange: '>=1.0.0 <22.0.8-opr.1'
+      operators.openshift.io/infrastructure-features: '["Disconnected"]'
+      operators.openshift.io/valid-subscription: '["OpenShift Container Platform",
+        "OpenShift Platform Plus"]'
+      repository: https://github.com/keycloak/keycloak
+      support: Red Hat
+    apiServiceDefinitions: {}
+    crdDescriptions:
+      owned:
+      - description: Represents a Keycloak Realm Import
+        displayName: KeycloakRealmImport
+        kind: KeycloakRealmImport
+        name: keycloakrealmimports.k8s.keycloak.org
+        version: v2alpha1
+      - description: Represents a Keycloak Instance
+        displayName: Keycloak
+        kind: Keycloak
+        name: keycloaks.k8s.keycloak.org
+        version: v2alpha1
+    description: |
+      A Kubernetes Operator based on the Operator SDK for installing and managing Keycloak.
+
+      Keycloak lets you add authentication to applications and secure services with minimum fuss. No need to deal with storing users or authenticating users. It's all available out of the box.
+
+      The operator can deploy and manage Keycloak instances on Kubernetes and OpenShift.
+      The following features are supported:
+
+      * Install Keycloak to a namespace
+      * Import Keycloak Realms
+    displayName: Keycloak Operator
+    installModes:
+    - supported: true
+      type: OwnNamespace
+    - supported: true
+      type: SingleNamespace
+    - supported: false
+      type: MultiNamespace
+    - supported: false
+      type: AllNamespaces
+    keywords:
+    - Keycloak
+    - Identity
+    - Access
+    labels:
+      operatorframework.io/arch.amd64: supported
+      operatorframework.io/arch.ppc64le: supported
+      operatorframework.io/arch.s390x: supported
+      operatorframework.io/os.linux: supported
+    links:
+    - name: Documentation
+      url: https://www.keycloak.org/guides#operator
+    - name: Keycloak
+      url: https://www.keycloak.org/
+    - name: Keycloak Discourse
+      url: https://keycloak.discourse.group/
+    maintainers:
+    - email: keycloak-dev@googlegroups.com
+      name: Keycloak DEV mailing list
+    maturity: stable
+    provider:
+      name: Red Hat
+relatedImages:
+- image: registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:b80ba7050086caecee74fb40a90314faa90f053426d3250fd290c4b5fcfce8fa
+  name: ""
+- image: registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:9f1f57b7cf537ba99882af9ad556beb9aa98757f710a5c4f36159622ea511b64
+  name: keycloak-rhel9-operator-9f1f57b7cf537ba99882af9ad556beb9aa98757f710a5c4f36159622ea511b64-annotation
+- image: registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:9f1f57b7cf537ba99882af9ad556beb9aa98757f710a5c4f36159622ea511b64
+  name: rhbk-operator
+- image: registry.redhat.io/rhbk/keycloak-rhel9@sha256:0f7fd9d2d0964c017caa362a88d5fec868e4d995dd71f3d070f57f688b256adc
+  name: keycloak
+schema: olm.bundle
+---
+image: registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:98a07cf517af29a93a91416a6b3fa5d8c4624b2595c78106845278ca296c32a5
+name: rhbk-operator.v22.0.8-opr.2
+package: rhbk-operator
+properties:
+- type: olm.gvk
+  value:
+    group: k8s.keycloak.org
+    kind: Keycloak
+    version: v2alpha1
+- type: olm.gvk
+  value:
+    group: k8s.keycloak.org
+    kind: KeycloakRealmImport
+    version: v2alpha1
+- type: olm.package
+  value:
+    packageName: rhbk-operator
+    version: 22.0.8-opr.2
+- type: olm.csv.metadata
+  value:
+    annotations:
+      alm-examples: |-
+        [
+          {
+            "apiVersion": "k8s.keycloak.org/v2alpha1",
+            "kind": "Keycloak",
+            "metadata": {
+              "name": "example-keycloak",
+              "labels": {
+                "app": "sso"
+              }
+            },
+            "spec": {
+              "instances": 1,
+              "hostname": "example.org",
+              "tlsSecret": "my-tls-secret"
             }
-        },
-        {
-            "type": "olm.csv.metadata",
-            "value": {
-                "annotations": {
-                    "alm-examples": "[\n  {\n    \"apiVersion\": \"k8s.keycloak.org/v2alpha1\",\n    \"kind\": \"Keycloak\",\n    \"metadata\": {\n      \"name\": \"example-keycloak\",\n      \"labels\": {\n        \"app\": \"sso\"\n      }\n    },\n    \"spec\": {\n      \"instances\": 1,\n      \"hostname\": \"example.org\",\n      \"tlsSecret\": \"my-tls-secret\"\n    }\n  },\n  {\n    \"apiVersion\": \"k8s.keycloak.org/v2alpha1\",\n    \"kind\": \"KeycloakRealmImport\",\n    \"metadata\": {\n      \"name\": \"example-keycloak-realm-import\",\n      \"labels\": {\n        \"app\": \"sso\"\n      }\n    },\n    \"spec\": {\n      \"keycloakCRName\": \"example-keycloak\",\n      \"realm\": {}\n    }\n  }\n]",
-                    "capabilities": "Deep Insights",
-                    "categories": "Security",
-                    "certified": "false",
-                    "containerImage": "registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:68cc1670c446d8a7876e1536faa4a8e7c5bed0d175cd31307f60f7afd0b7833f",
-                    "createdAt": "12/11/23 17:35:55",
-                    "description": "An Operator for installing and managing Keycloak",
-                    "olm.skipRange": ">=1.0.0 <22.0.7-opr.1",
-                    "operators.openshift.io/infrastructure-features": "[\"Disconnected\"]",
-                    "operators.openshift.io/valid-subscription": "[\"OpenShift Container Platform\", \"OpenShift Platform Plus\"]",
-                    "repository": "https://github.com/keycloak/keycloak",
-                    "support": "Red Hat"
-                },
-                "apiServiceDefinitions": {},
-                "crdDescriptions": {
-                    "owned": [
-                        {
-                            "name": "keycloakrealmimports.k8s.keycloak.org",
-                            "version": "v2alpha1",
-                            "kind": "KeycloakRealmImport",
-                            "displayName": "KeycloakRealmImport",
-                            "description": "Represents a Keycloak Realm Import"
-                        },
-                        {
-                            "name": "keycloaks.k8s.keycloak.org",
-                            "version": "v2alpha1",
-                            "kind": "Keycloak",
-                            "displayName": "Keycloak",
-                            "description": "Represents a Keycloak Instance"
-                        }
-                    ]
-                },
-                "description": "A Kubernetes Operator based on the Operator SDK for installing and managing Keycloak.\n\nKeycloak lets you add authentication to applications and secure services with minimum fuss. No need to deal with storing users or authenticating users. It's all available out of the box.\n\nThe operator can deploy and manage Keycloak instances on Kubernetes and OpenShift.\nThe following features are supported:\n\n* Install Keycloak to a namespace\n* Import Keycloak Realms\n",
-                "displayName": "Keycloak Operator",
-                "installModes": [
-                    {
-                        "type": "OwnNamespace",
-                        "supported": true
-                    },
-                    {
-                        "type": "SingleNamespace",
-                        "supported": true
-                    },
-                    {
-                        "type": "MultiNamespace",
-                        "supported": false
-                    },
-                    {
-                        "type": "AllNamespaces",
-                        "supported": false
-                    }
-                ],
-                "keywords": [
-                    "Keycloak",
-                    "Identity",
-                    "Access"
-                ],
-                "labels": {
-                    "operatorframework.io/arch.amd64": "supported",
-                    "operatorframework.io/arch.ppc64le": "supported",
-                    "operatorframework.io/arch.s390x": "supported",
-                    "operatorframework.io/os.linux": "supported"
-                },
-                "links": [
-                    {
-                        "name": "Documentation",
-                        "url": "https://www.keycloak.org/guides#operator"
-                    },
-                    {
-                        "name": "Keycloak",
-                        "url": "https://www.keycloak.org/"
-                    },
-                    {
-                        "name": "Keycloak Discourse",
-                        "url": "https://keycloak.discourse.group/"
-                    }
-                ],
-                "maintainers": [
-                    {
-                        "name": "Keycloak DEV mailing list",
-                        "email": "keycloak-dev@googlegroups.com"
-                    }
-                ],
-                "maturity": "stable",
-                "provider": {
-                    "name": "Red Hat"
-                }
+          },
+          {
+            "apiVersion": "k8s.keycloak.org/v2alpha1",
+            "kind": "KeycloakRealmImport",
+            "metadata": {
+              "name": "example-keycloak-realm-import",
+              "labels": {
+                "app": "sso"
+              }
+            },
+            "spec": {
+              "keycloakCRName": "example-keycloak",
+              "realm": {}
             }
-        }
-    ],
-    "relatedImages": [
-        {
-            "name": "",
-            "image": "registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:d0e89da5092f3573e723ddbfbc4464fa5f965dcb989a836d5c9f7f10e026a7b4"
-        },
-        {
-            "name": "keycloak-rhel9-operator-68cc1670c446d8a7876e1536faa4a8e7c5bed0d175cd31307f60f7afd0b7833f-annotation",
-            "image": "registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:68cc1670c446d8a7876e1536faa4a8e7c5bed0d175cd31307f60f7afd0b7833f"
-        },
-        {
-            "name": "rhbk-operator",
-            "image": "registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:68cc1670c446d8a7876e1536faa4a8e7c5bed0d175cd31307f60f7afd0b7833f"
-        },
-        {
-            "name": "keycloak",
-            "image": "registry.redhat.io/rhbk/keycloak-rhel9@sha256:d18adf0219a17b6619ddfb86a7d569019481f0315d94917793038ba5c6dc9567"
-        }
-    ]
-}
-{
-    "schema": "olm.bundle",
-    "name": "rhbk-operator.v22.0.8-opr.1",
-    "package": "rhbk-operator",
-    "image": "registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:b80ba7050086caecee74fb40a90314faa90f053426d3250fd290c4b5fcfce8fa",
-    "properties": [
-        {
-            "type": "olm.gvk",
-            "value": {
-                "group": "k8s.keycloak.org",
-                "kind": "Keycloak",
-                "version": "v2alpha1"
+          }
+        ]
+      capabilities: Deep Insights
+      categories: Security
+      certified: "false"
+      containerImage: registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:57f9efe7c3b4e19eb85f6f06ba3024949821e06b7be41f3baddfb5a344f47dc8
+      createdAt: 01/23/24 15:45:49
+      description: An Operator for installing and managing Keycloak
+      olm.skipRange: '>=1.0.0 <22.0.8-opr.2'
+      operators.openshift.io/infrastructure-features: '["Disconnected"]'
+      operators.openshift.io/valid-subscription: '["OpenShift Container Platform",
+        "OpenShift Platform Plus"]'
+      repository: https://github.com/keycloak/keycloak
+      support: Red Hat
+    apiServiceDefinitions: {}
+    crdDescriptions:
+      owned:
+      - description: Represents a Keycloak Realm Import
+        displayName: KeycloakRealmImport
+        kind: KeycloakRealmImport
+        name: keycloakrealmimports.k8s.keycloak.org
+        version: v2alpha1
+      - description: Represents a Keycloak Instance
+        displayName: Keycloak
+        kind: Keycloak
+        name: keycloaks.k8s.keycloak.org
+        version: v2alpha1
+    description: |
+      A Kubernetes Operator based on the Operator SDK for installing and managing Keycloak.
+
+      Keycloak lets you add authentication to applications and secure services with minimum fuss. No need to deal with storing users or authenticating users. It's all available out of the box.
+
+      The operator can deploy and manage Keycloak instances on Kubernetes and OpenShift.
+      The following features are supported:
+
+      * Install Keycloak to a namespace
+      * Import Keycloak Realms
+    displayName: Keycloak Operator
+    installModes:
+    - supported: true
+      type: OwnNamespace
+    - supported: true
+      type: SingleNamespace
+    - supported: false
+      type: MultiNamespace
+    - supported: false
+      type: AllNamespaces
+    keywords:
+    - Keycloak
+    - Identity
+    - Access
+    labels:
+      operatorframework.io/arch.amd64: supported
+      operatorframework.io/arch.ppc64le: supported
+      operatorframework.io/arch.s390x: supported
+      operatorframework.io/os.linux: supported
+    links:
+    - name: Documentation
+      url: https://www.keycloak.org/guides#operator
+    - name: Keycloak
+      url: https://www.keycloak.org/
+    - name: Keycloak Discourse
+      url: https://keycloak.discourse.group/
+    maintainers:
+    - email: keycloak-dev@googlegroups.com
+      name: Keycloak DEV mailing list
+    maturity: stable
+    provider:
+      name: Red Hat
+relatedImages:
+- image: registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:98a07cf517af29a93a91416a6b3fa5d8c4624b2595c78106845278ca296c32a5
+  name: ""
+- image: registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:57f9efe7c3b4e19eb85f6f06ba3024949821e06b7be41f3baddfb5a344f47dc8
+  name: keycloak-rhel9-operator-57f9efe7c3b4e19eb85f6f06ba3024949821e06b7be41f3baddfb5a344f47dc8-annotation
+- image: registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:57f9efe7c3b4e19eb85f6f06ba3024949821e06b7be41f3baddfb5a344f47dc8
+  name: rhbk-operator
+- image: registry.redhat.io/rhbk/keycloak-rhel9@sha256:ae4147678039edbfef11fb28426a0d1babfd199672c1500f97a7539e9033b52f
+  name: keycloak
+schema: olm.bundle
+---
+image: registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:bff77fb60ce04e99c8194e69678d9ce1d1c92e56379c9ee8421e93678a392897
+name: rhbk-operator.v22.0.9-opr.1
+package: rhbk-operator
+properties:
+- type: olm.gvk
+  value:
+    group: k8s.keycloak.org
+    kind: Keycloak
+    version: v2alpha1
+- type: olm.gvk
+  value:
+    group: k8s.keycloak.org
+    kind: KeycloakRealmImport
+    version: v2alpha1
+- type: olm.package
+  value:
+    packageName: rhbk-operator
+    version: 22.0.9-opr.1
+- type: olm.csv.metadata
+  value:
+    annotations:
+      alm-examples: |-
+        [
+          {
+            "apiVersion": "k8s.keycloak.org/v2alpha1",
+            "kind": "Keycloak",
+            "metadata": {
+              "name": "example-keycloak",
+              "labels": {
+                "app": "sso"
+              }
+            },
+            "spec": {
+              "instances": 1,
+              "hostname": "example.org",
+              "tlsSecret": "my-tls-secret"
             }
-        },
-        {
-            "type": "olm.gvk",
-            "value": {
-                "group": "k8s.keycloak.org",
-                "kind": "KeycloakRealmImport",
-                "version": "v2alpha1"
+          },
+          {
+            "apiVersion": "k8s.keycloak.org/v2alpha1",
+            "kind": "KeycloakRealmImport",
+            "metadata": {
+              "name": "example-keycloak-realm-import",
+              "labels": {
+                "app": "sso"
+              }
+            },
+            "spec": {
+              "keycloakCRName": "example-keycloak",
+              "realm": {}
             }
-        },
-        {
-            "type": "olm.package",
-            "value": {
-                "packageName": "rhbk-operator",
-                "version": "22.0.8-opr.1"
-            }
-        },
-        {
-            "type": "olm.csv.metadata",
-            "value": {
-                "annotations": {
-                    "alm-examples": "[\n  {\n    \"apiVersion\": \"k8s.keycloak.org/v2alpha1\",\n    \"kind\": \"Keycloak\",\n    \"metadata\": {\n      \"name\": \"example-keycloak\",\n      \"labels\": {\n        \"app\": \"sso\"\n      }\n    },\n    \"spec\": {\n      \"instances\": 1,\n      \"hostname\": \"example.org\",\n      \"tlsSecret\": \"my-tls-secret\"\n    }\n  },\n  {\n    \"apiVersion\": \"k8s.keycloak.org/v2alpha1\",\n    \"kind\": \"KeycloakRealmImport\",\n    \"metadata\": {\n      \"name\": \"example-keycloak-realm-import\",\n      \"labels\": {\n        \"app\": \"sso\"\n      }\n    },\n    \"spec\": {\n      \"keycloakCRName\": \"example-keycloak\",\n      \"realm\": {}\n    }\n  }\n]",
-                    "capabilities": "Deep Insights",
-                    "categories": "Security",
-                    "certified": "false",
-                    "containerImage": "registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:9f1f57b7cf537ba99882af9ad556beb9aa98757f710a5c4f36159622ea511b64",
-                    "createdAt": "01/04/24 18:19:37",
-                    "description": "An Operator for installing and managing Keycloak",
-                    "olm.skipRange": ">=1.0.0 <22.0.8-opr.1",
-                    "operators.openshift.io/infrastructure-features": "[\"Disconnected\"]",
-                    "operators.openshift.io/valid-subscription": "[\"OpenShift Container Platform\", \"OpenShift Platform Plus\"]",
-                    "repository": "https://github.com/keycloak/keycloak",
-                    "support": "Red Hat"
-                },
-                "apiServiceDefinitions": {},
-                "crdDescriptions": {
-                    "owned": [
-                        {
-                            "name": "keycloakrealmimports.k8s.keycloak.org",
-                            "version": "v2alpha1",
-                            "kind": "KeycloakRealmImport",
-                            "displayName": "KeycloakRealmImport",
-                            "description": "Represents a Keycloak Realm Import"
-                        },
-                        {
-                            "name": "keycloaks.k8s.keycloak.org",
-                            "version": "v2alpha1",
-                            "kind": "Keycloak",
-                            "displayName": "Keycloak",
-                            "description": "Represents a Keycloak Instance"
-                        }
-                    ]
-                },
-                "description": "A Kubernetes Operator based on the Operator SDK for installing and managing Keycloak.\n\nKeycloak lets you add authentication to applications and secure services with minimum fuss. No need to deal with storing users or authenticating users. It's all available out of the box.\n\nThe operator can deploy and manage Keycloak instances on Kubernetes and OpenShift.\nThe following features are supported:\n\n* Install Keycloak to a namespace\n* Import Keycloak Realms\n",
-                "displayName": "Keycloak Operator",
-                "installModes": [
-                    {
-                        "type": "OwnNamespace",
-                        "supported": true
-                    },
-                    {
-                        "type": "SingleNamespace",
-                        "supported": true
-                    },
-                    {
-                        "type": "MultiNamespace",
-                        "supported": false
-                    },
-                    {
-                        "type": "AllNamespaces",
-                        "supported": false
-                    }
-                ],
-                "keywords": [
-                    "Keycloak",
-                    "Identity",
-                    "Access"
-                ],
-                "labels": {
-                    "operatorframework.io/arch.amd64": "supported",
-                    "operatorframework.io/arch.ppc64le": "supported",
-                    "operatorframework.io/arch.s390x": "supported",
-                    "operatorframework.io/os.linux": "supported"
-                },
-                "links": [
-                    {
-                        "name": "Documentation",
-                        "url": "https://www.keycloak.org/guides#operator"
-                    },
-                    {
-                        "name": "Keycloak",
-                        "url": "https://www.keycloak.org/"
-                    },
-                    {
-                        "name": "Keycloak Discourse",
-                        "url": "https://keycloak.discourse.group/"
-                    }
-                ],
-                "maintainers": [
-                    {
-                        "name": "Keycloak DEV mailing list",
-                        "email": "keycloak-dev@googlegroups.com"
-                    }
-                ],
-                "maturity": "stable",
-                "provider": {
-                    "name": "Red Hat"
-                }
-            }
-        }
-    ],
-    "relatedImages": [
-        {
-            "name": "",
-            "image": "registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:b80ba7050086caecee74fb40a90314faa90f053426d3250fd290c4b5fcfce8fa"
-        },
-        {
-            "name": "keycloak-rhel9-operator-9f1f57b7cf537ba99882af9ad556beb9aa98757f710a5c4f36159622ea511b64-annotation",
-            "image": "registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:9f1f57b7cf537ba99882af9ad556beb9aa98757f710a5c4f36159622ea511b64"
-        },
-        {
-            "name": "rhbk-operator",
-            "image": "registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:9f1f57b7cf537ba99882af9ad556beb9aa98757f710a5c4f36159622ea511b64"
-        },
-        {
-            "name": "keycloak",
-            "image": "registry.redhat.io/rhbk/keycloak-rhel9@sha256:0f7fd9d2d0964c017caa362a88d5fec868e4d995dd71f3d070f57f688b256adc"
-        }
-    ]
-}
-{
-    "schema": "olm.bundle",
-    "name": "rhbk-operator.v22.0.8-opr.2",
-    "package": "rhbk-operator",
-    "image": "registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:98a07cf517af29a93a91416a6b3fa5d8c4624b2595c78106845278ca296c32a5",
-    "properties": [
-        {
-            "type": "olm.gvk",
-            "value": {
-                "group": "k8s.keycloak.org",
-                "kind": "Keycloak",
-                "version": "v2alpha1"
-            }
-        },
-        {
-            "type": "olm.gvk",
-            "value": {
-                "group": "k8s.keycloak.org",
-                "kind": "KeycloakRealmImport",
-                "version": "v2alpha1"
-            }
-        },
-        {
-            "type": "olm.package",
-            "value": {
-                "packageName": "rhbk-operator",
-                "version": "22.0.8-opr.2"
-            }
-        },
-        {
-            "type": "olm.csv.metadata",
-            "value": {
-                "annotations": {
-                    "alm-examples": "[\n  {\n    \"apiVersion\": \"k8s.keycloak.org/v2alpha1\",\n    \"kind\": \"Keycloak\",\n    \"metadata\": {\n      \"name\": \"example-keycloak\",\n      \"labels\": {\n        \"app\": \"sso\"\n      }\n    },\n    \"spec\": {\n      \"instances\": 1,\n      \"hostname\": \"example.org\",\n      \"tlsSecret\": \"my-tls-secret\"\n    }\n  },\n  {\n    \"apiVersion\": \"k8s.keycloak.org/v2alpha1\",\n    \"kind\": \"KeycloakRealmImport\",\n    \"metadata\": {\n      \"name\": \"example-keycloak-realm-import\",\n      \"labels\": {\n        \"app\": \"sso\"\n      }\n    },\n    \"spec\": {\n      \"keycloakCRName\": \"example-keycloak\",\n      \"realm\": {}\n    }\n  }\n]",
-                    "capabilities": "Deep Insights",
-                    "categories": "Security",
-                    "certified": "false",
-                    "containerImage": "registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:57f9efe7c3b4e19eb85f6f06ba3024949821e06b7be41f3baddfb5a344f47dc8",
-                    "createdAt": "01/23/24 15:45:49",
-                    "description": "An Operator for installing and managing Keycloak",
-                    "olm.skipRange": ">=1.0.0 <22.0.8-opr.2",
-                    "operators.openshift.io/infrastructure-features": "[\"Disconnected\"]",
-                    "operators.openshift.io/valid-subscription": "[\"OpenShift Container Platform\", \"OpenShift Platform Plus\"]",
-                    "repository": "https://github.com/keycloak/keycloak",
-                    "support": "Red Hat"
-                },
-                "apiServiceDefinitions": {},
-                "crdDescriptions": {
-                    "owned": [
-                        {
-                            "name": "keycloakrealmimports.k8s.keycloak.org",
-                            "version": "v2alpha1",
-                            "kind": "KeycloakRealmImport",
-                            "displayName": "KeycloakRealmImport",
-                            "description": "Represents a Keycloak Realm Import"
-                        },
-                        {
-                            "name": "keycloaks.k8s.keycloak.org",
-                            "version": "v2alpha1",
-                            "kind": "Keycloak",
-                            "displayName": "Keycloak",
-                            "description": "Represents a Keycloak Instance"
-                        }
-                    ]
-                },
-                "description": "A Kubernetes Operator based on the Operator SDK for installing and managing Keycloak.\n\nKeycloak lets you add authentication to applications and secure services with minimum fuss. No need to deal with storing users or authenticating users. It's all available out of the box.\n\nThe operator can deploy and manage Keycloak instances on Kubernetes and OpenShift.\nThe following features are supported:\n\n* Install Keycloak to a namespace\n* Import Keycloak Realms\n",
-                "displayName": "Keycloak Operator",
-                "installModes": [
-                    {
-                        "type": "OwnNamespace",
-                        "supported": true
-                    },
-                    {
-                        "type": "SingleNamespace",
-                        "supported": true
-                    },
-                    {
-                        "type": "MultiNamespace",
-                        "supported": false
-                    },
-                    {
-                        "type": "AllNamespaces",
-                        "supported": false
-                    }
-                ],
-                "keywords": [
-                    "Keycloak",
-                    "Identity",
-                    "Access"
-                ],
-                "labels": {
-                    "operatorframework.io/arch.amd64": "supported",
-                    "operatorframework.io/arch.ppc64le": "supported",
-                    "operatorframework.io/arch.s390x": "supported",
-                    "operatorframework.io/os.linux": "supported"
-                },
-                "links": [
-                    {
-                        "name": "Documentation",
-                        "url": "https://www.keycloak.org/guides#operator"
-                    },
-                    {
-                        "name": "Keycloak",
-                        "url": "https://www.keycloak.org/"
-                    },
-                    {
-                        "name": "Keycloak Discourse",
-                        "url": "https://keycloak.discourse.group/"
-                    }
-                ],
-                "maintainers": [
-                    {
-                        "name": "Keycloak DEV mailing list",
-                        "email": "keycloak-dev@googlegroups.com"
-                    }
-                ],
-                "maturity": "stable",
-                "provider": {
-                    "name": "Red Hat"
-                }
-            }
-        }
-    ],
-    "relatedImages": [
-        {
-            "name": "",
-            "image": "registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:98a07cf517af29a93a91416a6b3fa5d8c4624b2595c78106845278ca296c32a5"
-        },
-        {
-            "name": "keycloak-rhel9-operator-57f9efe7c3b4e19eb85f6f06ba3024949821e06b7be41f3baddfb5a344f47dc8-annotation",
-            "image": "registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:57f9efe7c3b4e19eb85f6f06ba3024949821e06b7be41f3baddfb5a344f47dc8"
-        },
-        {
-            "name": "rhbk-operator",
-            "image": "registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:57f9efe7c3b4e19eb85f6f06ba3024949821e06b7be41f3baddfb5a344f47dc8"
-        },
-        {
-            "name": "keycloak",
-            "image": "registry.redhat.io/rhbk/keycloak-rhel9@sha256:ae4147678039edbfef11fb28426a0d1babfd199672c1500f97a7539e9033b52f"
-        }
-    ]
-}
-{
-    "schema": "olm.bundle",
-    "name": "rhbk-operator.v22.0.9-opr.1",
-    "package": "rhbk-operator",
-    "image": "registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:bff77fb60ce04e99c8194e69678d9ce1d1c92e56379c9ee8421e93678a392897",
-    "properties": [
-        {
-            "type": "olm.gvk",
-            "value": {
-                "group": "k8s.keycloak.org",
-                "kind": "Keycloak",
-                "version": "v2alpha1"
-            }
-        },
-        {
-            "type": "olm.gvk",
-            "value": {
-                "group": "k8s.keycloak.org",
-                "kind": "KeycloakRealmImport",
-                "version": "v2alpha1"
-            }
-        },
-        {
-            "type": "olm.package",
-            "value": {
-                "packageName": "rhbk-operator",
-                "version": "22.0.9-opr.1"
-            }
-        },
-        {
-            "type": "olm.csv.metadata",
-            "value": {
-                "annotations": {
-                    "alm-examples": "[\n  {\n    \"apiVersion\": \"k8s.keycloak.org/v2alpha1\",\n    \"kind\": \"Keycloak\",\n    \"metadata\": {\n      \"name\": \"example-keycloak\",\n      \"labels\": {\n        \"app\": \"sso\"\n      }\n    },\n    \"spec\": {\n      \"instances\": 1,\n      \"hostname\": \"example.org\",\n      \"tlsSecret\": \"my-tls-secret\"\n    }\n  },\n  {\n    \"apiVersion\": \"k8s.keycloak.org/v2alpha1\",\n    \"kind\": \"KeycloakRealmImport\",\n    \"metadata\": {\n      \"name\": \"example-keycloak-realm-import\",\n      \"labels\": {\n        \"app\": \"sso\"\n      }\n    },\n    \"spec\": {\n      \"keycloakCRName\": \"example-keycloak\",\n      \"realm\": {}\n    }\n  }\n]",
-                    "capabilities": "Deep Insights",
-                    "categories": "Security",
-                    "certified": "false",
-                    "containerImage": "registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:40aa44a269a3e0d98ee0020176b64bf7938feada9a608016a2f6f6897b2558ee",
-                    "createdAt": "2024-02-28T16:40:09Z",
-                    "description": "An Operator for installing and managing Keycloak",
-                    "features.operators.openshift.io/cnf": "false",
-                    "features.operators.openshift.io/cni": "false",
-                    "features.operators.openshift.io/csi": "false",
-                    "features.operators.openshift.io/disconnected": "true",
-                    "features.operators.openshift.io/fips-compliant": "false",
-                    "features.operators.openshift.io/proxy-aware": "false",
-                    "features.operators.openshift.io/tls-profiles": "false",
-                    "features.operators.openshift.io/token-auth-aws": "false",
-                    "features.operators.openshift.io/token-auth-azure": "false",
-                    "features.operators.openshift.io/token-auth-gcp": "false",
-                    "olm.skipRange": ">=1.0.0 <22.0.9-opr.1",
-                    "operators.openshift.io/valid-subscription": "[\"OpenShift Container Platform\", \"OpenShift Platform Plus\"]",
-                    "repository": "https://github.com/keycloak/keycloak",
-                    "support": "Red Hat"
-                },
-                "apiServiceDefinitions": {},
-                "crdDescriptions": {
-                    "owned": [
-                        {
-                            "name": "keycloakrealmimports.k8s.keycloak.org",
-                            "version": "v2alpha1",
-                            "kind": "KeycloakRealmImport",
-                            "displayName": "KeycloakRealmImport",
-                            "description": "Represents a Keycloak Realm Import"
-                        },
-                        {
-                            "name": "keycloaks.k8s.keycloak.org",
-                            "version": "v2alpha1",
-                            "kind": "Keycloak",
-                            "displayName": "Keycloak",
-                            "description": "Represents a Keycloak Instance"
-                        }
-                    ]
-                },
-                "description": "A Kubernetes Operator based on the Operator SDK for installing and managing Keycloak.\n\nKeycloak lets you add authentication to applications and secure services with minimum fuss. No need to deal with storing users or authenticating users. It's all available out of the box.\n\nThe operator can deploy and manage Keycloak instances on Kubernetes and OpenShift.\nThe following features are supported:\n\n* Install Keycloak to a namespace\n* Import Keycloak Realms\n",
-                "displayName": "Keycloak Operator",
-                "installModes": [
-                    {
-                        "type": "OwnNamespace",
-                        "supported": true
-                    },
-                    {
-                        "type": "SingleNamespace",
-                        "supported": true
-                    },
-                    {
-                        "type": "MultiNamespace",
-                        "supported": false
-                    },
-                    {
-                        "type": "AllNamespaces",
-                        "supported": false
-                    }
-                ],
-                "keywords": [
-                    "Keycloak",
-                    "Identity",
-                    "Access"
-                ],
-                "labels": {
-                    "operatorframework.io/arch.amd64": "supported",
-                    "operatorframework.io/arch.ppc64le": "supported",
-                    "operatorframework.io/arch.s390x": "supported",
-                    "operatorframework.io/os.linux": "supported"
-                },
-                "links": [
-                    {
-                        "name": "Documentation",
-                        "url": "https://www.keycloak.org/guides#operator"
-                    },
-                    {
-                        "name": "Keycloak",
-                        "url": "https://www.keycloak.org/"
-                    },
-                    {
-                        "name": "Keycloak Discourse",
-                        "url": "https://keycloak.discourse.group/"
-                    }
-                ],
-                "maintainers": [
-                    {
-                        "name": "Keycloak DEV mailing list",
-                        "email": "keycloak-dev@googlegroups.com"
-                    }
-                ],
-                "maturity": "stable",
-                "provider": {
-                    "name": "Red Hat"
-                }
-            }
-        }
-    ],
-    "relatedImages": [
-        {
-            "name": "",
-            "image": "registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:bff77fb60ce04e99c8194e69678d9ce1d1c92e56379c9ee8421e93678a392897"
-        },
-        {
-            "name": "keycloak-rhel9-operator-40aa44a269a3e0d98ee0020176b64bf7938feada9a608016a2f6f6897b2558ee-annotation",
-            "image": "registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:40aa44a269a3e0d98ee0020176b64bf7938feada9a608016a2f6f6897b2558ee"
-        },
-        {
-            "name": "rhbk-operator",
-            "image": "registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:40aa44a269a3e0d98ee0020176b64bf7938feada9a608016a2f6f6897b2558ee"
-        },
-        {
-            "name": "keycloak",
-            "image": "registry.redhat.io/rhbk/keycloak-rhel9@sha256:c40c6664851190451d14e0cb8945d4e45315ac79440abd63e126b5e43d0dd078"
-        }
-    ]
-}
+          }
+        ]
+      capabilities: Deep Insights
+      categories: Security
+      certified: "false"
+      containerImage: registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:40aa44a269a3e0d98ee0020176b64bf7938feada9a608016a2f6f6897b2558ee
+      createdAt: "2024-02-28T16:40:09Z"
+      description: An Operator for installing and managing Keycloak
+      features.operators.openshift.io/cnf: "false"
+      features.operators.openshift.io/cni: "false"
+      features.operators.openshift.io/csi: "false"
+      features.operators.openshift.io/disconnected: "true"
+      features.operators.openshift.io/fips-compliant: "false"
+      features.operators.openshift.io/proxy-aware: "false"
+      features.operators.openshift.io/tls-profiles: "false"
+      features.operators.openshift.io/token-auth-aws: "false"
+      features.operators.openshift.io/token-auth-azure: "false"
+      features.operators.openshift.io/token-auth-gcp: "false"
+      olm.skipRange: '>=1.0.0 <22.0.9-opr.1'
+      operators.openshift.io/valid-subscription: '["OpenShift Container Platform",
+        "OpenShift Platform Plus"]'
+      repository: https://github.com/keycloak/keycloak
+      support: Red Hat
+    apiServiceDefinitions: {}
+    crdDescriptions:
+      owned:
+      - description: Represents a Keycloak Realm Import
+        displayName: KeycloakRealmImport
+        kind: KeycloakRealmImport
+        name: keycloakrealmimports.k8s.keycloak.org
+        version: v2alpha1
+      - description: Represents a Keycloak Instance
+        displayName: Keycloak
+        kind: Keycloak
+        name: keycloaks.k8s.keycloak.org
+        version: v2alpha1
+    description: |
+      A Kubernetes Operator based on the Operator SDK for installing and managing Keycloak.
+
+      Keycloak lets you add authentication to applications and secure services with minimum fuss. No need to deal with storing users or authenticating users. It's all available out of the box.
+
+      The operator can deploy and manage Keycloak instances on Kubernetes and OpenShift.
+      The following features are supported:
+
+      * Install Keycloak to a namespace
+      * Import Keycloak Realms
+    displayName: Keycloak Operator
+    installModes:
+    - supported: true
+      type: OwnNamespace
+    - supported: true
+      type: SingleNamespace
+    - supported: false
+      type: MultiNamespace
+    - supported: false
+      type: AllNamespaces
+    keywords:
+    - Keycloak
+    - Identity
+    - Access
+    labels:
+      operatorframework.io/arch.amd64: supported
+      operatorframework.io/arch.ppc64le: supported
+      operatorframework.io/arch.s390x: supported
+      operatorframework.io/os.linux: supported
+    links:
+    - name: Documentation
+      url: https://www.keycloak.org/guides#operator
+    - name: Keycloak
+      url: https://www.keycloak.org/
+    - name: Keycloak Discourse
+      url: https://keycloak.discourse.group/
+    maintainers:
+    - email: keycloak-dev@googlegroups.com
+      name: Keycloak DEV mailing list
+    maturity: stable
+    provider:
+      name: Red Hat
+relatedImages:
+- image: registry.redhat.io/rhbk/keycloak-operator-bundle@sha256:bff77fb60ce04e99c8194e69678d9ce1d1c92e56379c9ee8421e93678a392897
+  name: ""
+- image: registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:40aa44a269a3e0d98ee0020176b64bf7938feada9a608016a2f6f6897b2558ee
+  name: keycloak-rhel9-operator-40aa44a269a3e0d98ee0020176b64bf7938feada9a608016a2f6f6897b2558ee-annotation
+- image: registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:40aa44a269a3e0d98ee0020176b64bf7938feada9a608016a2f6f6897b2558ee
+  name: rhbk-operator
+- image: registry.redhat.io/rhbk/keycloak-rhel9@sha256:c40c6664851190451d14e0cb8945d4e45315ac79440abd63e126b5e43d0dd078
+  name: keycloak
+schema: olm.bundle
