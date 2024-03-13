@@ -2,12 +2,6 @@
 
 set -euo pipefail
 
-join_by() {
-    local IFS="$1"
-    shift
-    echo "$*"
-}
-
 remove=(
     clair-scan
     clamav-scan
