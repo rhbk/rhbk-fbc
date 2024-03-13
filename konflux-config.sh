@@ -129,10 +129,10 @@ do
 apiVersion: appstudio.redhat.com/v1alpha1
 kind: Application
 metadata:
-  name: $namespace-$olm_version_dashed
+  name: $prefix-$olm_version_dashed
   namespace: $namespace-tenant
 spec:
-  displayName: $namespace-$olm_version_dashed
+  displayName: $prefix-$olm_version_dashed
 EOF
     } > application.yaml
 
@@ -146,7 +146,7 @@ metadata:
   annotations:
     image.redhat.com/generate: 'true'
 spec:
-  application: $namespace-$olm_version_dashed
+  application: $prefix-$olm_version_dashed
   componentName: $prefix-component-$olm_version_dashed
   replicas: 0
   resources:
@@ -170,12 +170,12 @@ EOF
 apiVersion: appstudio.redhat.com/v1beta1
 kind: IntegrationTestScenario
 metadata:
-  name: $namespace-$olm_version_dashed-enterprise-contract
+  name: $prefix-$olm_version_dashed-enterprise-contract
   namespace: $namespace-tenant
   labels:
     test.appstudio.openshift.io/optional: 'false'
 spec:
-  application: $namespace-$olm_version_dashed
+  application: $prefix-$olm_version_dashed
   contexts:
     - description: Application testing
       name: application
