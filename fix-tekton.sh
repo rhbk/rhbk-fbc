@@ -2,6 +2,29 @@
 
 set -euo pipefail
 
+# Fix event filters
+while read -r tekton_yaml
+do
+    # Build filter string
+    if grep -q 'pull-request.yaml$' <<<"$tekton_yaml"
+    then
+        event="pull_request"
+    elif grep -q 'push.yaml$' <<<"$tekton_yaml"
+    then
+        event="push"
+    else
+        echo "Error, can't determine event type for '$tekton_yaml'" >&2
+        exit 1
+    fi
+    catalog_dir="$(yq -e e '.spec.params | .[] | select(.name == "path-context") | .value' "$tekton_yaml")"
+    filter="event == \"$event\" && target_branch == \"main\" && ( \"$catalog_dir/***\".pathChanged() || \"$tekton_yaml\".pathChanged() )"
+    export filter
+
+    # Apply filter string
+    yq -i e '.metadata.annotations."pipelinesascode.tekton.dev/on-cel-expression" = strenv(filter)' "$tekton_yaml"
+done < <(find .tekton/ -type f -name '*.yaml')
+
+# Task names to remove
 remove=(
     clair-scan
     clamav-scan
