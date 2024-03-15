@@ -178,10 +178,23 @@ echo "-> Dockerfiles + devfiles" >&2
 for ocp_ver in "${ocp_versions[@]}"
 do
     # Soon this might be able to be simplified, as "binaryless" container, FROM scratch
-    cat > "catalog/$ocp_ver/Dockerfile" <<EOF
+    {
+        cat <<EOF
 # The base image is expected to contain
 # /bin/opm (with a serve subcommand) and /bin/grpc_health_probe
-FROM registry.redhat.io/openshift4/ose-operator-registry:$ocp_ver
+EOF
+
+        # OCP version 4.15 changed the image name
+        if [[ "$(printf '%s\n' "v4.14" "$ocp_ver" | sort -V | tail -n1)" == "v4.14" ]]
+        then
+            # Use old form <= v4.14
+            echo "FROM registry.redhat.io/openshift4/ose-operator-registry:$ocp_ver"
+        else
+            # Use new form > v4.14
+            echo "FROM registry.redhat.io/openshift4/ose-operator-registry-rhel9:$ocp_ver"
+        fi
+
+        cat <<EOF
 
 # Configure the entrypoint and command
 ENTRYPOINT ["/bin/opm"]
@@ -195,6 +208,7 @@ RUN ["/bin/opm", "serve", "/configs", "--cache-dir=/tmp/cache", "--cache-only"]
 # in the image
 LABEL operators.operatorframework.io.index.configs.v1=/configs
 EOF
+    } > "catalog/$ocp_ver/Dockerfile"
 
     devfile="catalog/$ocp_ver/devfile.yaml"
     yq -i e '.metadata.name = "fbc-" + .metadata.name' "$devfile"
