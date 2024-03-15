@@ -6,6 +6,8 @@ set -euo pipefail
 # Setup
 #
 
+catalog_filter="${1:-.}"
+
 if ! cfg="$(readlink -e config.yaml)"
 then
     echo "Could not find config file $cfg" >&2
@@ -195,7 +197,7 @@ EOF
     } > integrationtestscenario.yaml
 
     cd ..
-done < <(find "$origin_dir/catalog" -maxdepth 1 -type d -name 'v*')
+done < <(find "$origin_dir/catalog" -maxdepth 1 -type d -name 'v*' | grep "$catalog_filter")
 
 #
 # kubectl
@@ -204,6 +206,7 @@ done < <(find "$origin_dir/catalog" -maxdepth 1 -type d -name 'v*')
 work_dir_relative="$(realpath --relative-to="$origin_dir" "$work_dir")"
 if [ -t 0 ]
 then
+    echo "=> Your browser may open for authentication, if required" >&2
     read -rn1 -p "Ok to apply YAMLs inside '$work_dir_relative' to Konflux? [y/N]: "
     echo ""
     if ! [[ $REPLY =~ ^[Yy]$ ]]
@@ -216,7 +219,6 @@ else
     exit 3
 fi
 
-echo "=> Your browser may open for authentication, if required" >&2
 echo "=> Applying Konflux config via kubectl" >&2
 
 while read -r ocp_dir
@@ -228,4 +230,4 @@ do
     done
 done < <(find "$work_dir" -maxdepth 1 -type d -name 'v*')
 
-echo "=> Done" >&2
+echo "=> Done, you may need to switch new components to Custom Pipeline via the Konflux UI" >&2
