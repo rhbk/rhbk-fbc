@@ -1,4 +1,5 @@
 name: rhbk-operator
+repository: rhbk/keycloak-operator-bundle
 konflux:
   namespace: rhbk-release
   prefix: rhbk-fbc
