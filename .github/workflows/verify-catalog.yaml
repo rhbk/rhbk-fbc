@@ -1,0 +1,22 @@
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  verify-catalog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Packages
+        run: |
+          sudo add-apt-repository ppa:rmescandon/yq
+          sudo apt install yq jq -y
+
+      - name: Verify Catalog
+        run: ./verify-catalog.sh
