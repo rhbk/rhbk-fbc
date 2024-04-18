@@ -36,7 +36,7 @@ os="$(uname -s | tr '[:upper:]' '[:lower:]')"
 arch="$(uname -m | sed 's/x86_64/amd64/')"
 
 # These are the specific versions we want
-opm_version="v1.36.0"
+opm_version="v1.27.1"
 yq_version="v4.22.1"
 tf_version="v0.1.0"
 
@@ -168,11 +168,16 @@ EOF
 
 echo "=> Generating catalog for $operator_name" >&2
 
-echo "-> opm render" >&2
-opm alpha render-template composite -o yaml -f catalogs.yaml -c contributions.yaml
-
 echo "-> tap-fitter" >&2
 tap-fitter --catalog-path catalogs.yaml --composite-path contributions.yaml --provider "$operator_name"
+
+echo "-> opm render" >&2
+# TODO: Hacked for opm 1.27.1, restore when IIB fixed
+for ocp_ver in "${ocp_versions[@]}"
+do
+    opm alpha render-template composite -o yaml -f catalogs.yaml -c contributions.yaml
+    mv "rhbk-operator" "catalog/$ocp_ver/"
+done
 
 echo "-> Dockerfiles + devfiles" >&2
 for ocp_ver in "${ocp_versions[@]}"
