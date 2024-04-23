@@ -16,7 +16,18 @@ jobs:
       - name: Install Packages
         run: |
           sudo add-apt-repository ppa:rmescandon/yq
-          sudo apt install yq jq -y
+          sudo apt install yq jq skopeo -y
+
+      - name: Cache Verified Image Coordinates
+        id: cache-coords
+        uses: actions/cache@v4
+        with:
+          path: verified_coordinates
+          key: coords1
 
       - name: Verify Catalog
+        env:
+          RH_REGISTRY_USERNAME: ${{ secrets.RH_REGISTRY_USERNAME }}
+          RH_REGISTRY_PASSWORD: ${{ secrets.RH_REGISTRY_PASSWORD }}
+          REGISTRY_AUTH_FILE: /tmp/skopeo-auth
         run: ./verify-catalog.sh

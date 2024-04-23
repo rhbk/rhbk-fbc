@@ -25,38 +25,93 @@ then
     exit 10
 fi
 
-# Skopeo is too slow and requires authentication, so use public Pyxis API.
-
-# Query builder, has to be an actual script to work with xargs
-cat > format-query.sh <<'EOF'
-#!/bin/bash
-set -euo pipefail
-printf 'repositories =em= (manifest_list_digest =in= (%s' "$1"
-shift
-if [ $# -gt 0 ]
-then
-    printf ',%s' "$@"
-fi
-printf '))\n'
-EOF
-chmod +x format-query.sh
-
-# To avoid running into API limits, batch the image hashes into groups.
-sed -r 's|^.*@([^@]+)$|\1|' images | sort -u > needed_hashes
-cat needed_hashes | xargs -n30 ./format-query.sh > queries
-
-echo "=> Checking customer portal"
-# Execute the queries
-while read -r query
+echo "=> Checking registry auth" >&2
+for check_registry in "registry.redhat.io" "brew.registry.redhat.io"
 do
-    curl -sSf -X GET -G 'https://catalog.redhat.com/api/containers/v1/images' --data-urlencode "filter=$query" -H 'accept: application/json' | jq -r '.data | .[]? | .repositories | .[] | .manifest_list_digest'
-done <queries > >(sort -u > found_hashes)
+    if ! skopeo login --get-login "$check_registry" >/dev/null 2>/dev/null
+    then
+        if [ -v "RH_REGISTRY_USERNAME" ] && [ -v "RH_REGISTRY_PASSWORD" ]
+        then
+            skopeo login --username "$RH_REGISTRY_USERNAME" --password-stdin "$check_registry" <<<"$RH_REGISTRY_PASSWORD"
+        else
+            echo "Login to $check_registry before running this script" >&2
+            exit 125
+        fi
+    fi
+done
 
-if grep -vxF -f found_hashes needed_hashes > missing_hashes
+# Cache since skopeo is slow
+cache="$orig_dir/verified_coordinates"
+if [ -f "$cache" ]
 then
-    echo "ERROR: One or more images in the catalog can not be found in customer portal" >&2
-    grep -Ff missing_hashes images
-    exit 11
+    echo "=> Loading cache" >&2
+    cp "$cache" found
+else
+    >found
 fi
+
+echo "=> Checking images" >&2
+error=""
+>invalid-mediatype
+>image-missing
+>image-found-in-brew
+while read -r image
+do
+    if grep -qxF -e "$image" found
+    then
+        continue
+    fi
+    echo " -> $image" >&2
+
+    if mediatype="$(skopeo inspect --raw "docker://$image" | jq -r '.mediaType')"
+    then
+        # Image found, but ensure mediatype of bundles is ok
+        if grep -qF -e '-bundle@' <<<"$image" && [ "$mediatype" != "application/vnd.docker.distribution.manifest.v2+json" ]
+        then
+            echo "$image $mediatype" >> invalid-mediatype
+        else
+            echo "$image" >> found
+        fi
+    else
+        # Image not found
+        echo "$image" >> image-missing
+
+        # Check brew to see if it's there
+        if skopeo inspect --raw "docker://brew.$image"
+        then
+            echo "$image" >> image-found-in-brew
+        fi
+    fi
+done <images
+
+if [ -s invalid-mediatype ]
+then
+    echo "" >&2
+    echo "ERROR: one or more bundle digests points at an invalid mediatype:" >&2
+    cat invalid-mediatype >&2
+    error="20"
+fi
+
+if [ -s image-missing ]
+then
+    echo "" >&2
+    echo "ERROR: one or more images can not be found in registry.redhat.io:"
+    cat image-missing >&2
+    error="21"
+    if [ -s image-found-in-brew ]
+    then
+        echo "" >&2
+        echo "These images however were found in Brew, pending release:" >&2
+        cat image-found-in-brew >&2
+    fi
+fi
+
+if [ -n "$error" ]
+then
+    exit "$error"
+fi
+
+# Save cache if all is well
+cp found "$cache"
 
 echo "=> Catalog OK!" >&2
