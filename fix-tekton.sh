@@ -22,6 +22,12 @@ do
 
     # Apply filter string
     yq -i e '.metadata.annotations."pipelinesascode.tekton.dev/on-cel-expression" = strenv(filter)' "$tekton_yaml"
+
+    # Fix timeout
+    if [[ "$event" == "pull_request" ]]
+    then
+        yq -i -e e '(.spec.params | .[] | select(.name == "image-expires-after") | .value) = "14d"' "$tekton_yaml"
+    fi
 done < <(find .tekton/ -type f -name '*.yaml')
 
 # Task names to remove

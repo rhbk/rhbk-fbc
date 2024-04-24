@@ -22,7 +22,7 @@ spec:
     - name: git-url
       value: '{{source_url}}'
     - name: image-expires-after
-      value: 5d
+      value: 14d
     - name: output-image
       value: quay.io/redhat-user-workloads/rhbk-release-tenant/rhbk-fbc-v4-11/rhbk-fbc-component-v4-11:on-pr-{{revision}}
     - name: path-context
