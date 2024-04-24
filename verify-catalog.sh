@@ -77,7 +77,7 @@ do
         echo "$image" >> image-missing
 
         # Check brew to see if it's there
-        if skopeo inspect --raw "docker://brew.$image"
+        if skopeo inspect --raw "docker://brew.$image" >/dev/null
         then
             echo "$image" >> image-found-in-brew
         fi
