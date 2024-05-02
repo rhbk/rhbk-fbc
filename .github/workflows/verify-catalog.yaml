@@ -13,6 +13,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Get utils
+        uses: actions/checkout@v3
+        with:
+          repository: ASzc/fbc-utils
+          ref: main
+          path: ./util
+
       - name: Install Packages
         run: |
           sudo add-apt-repository ppa:rmescandon/yq
@@ -30,4 +37,4 @@ jobs:
           RH_REGISTRY_USERNAME: ${{ secrets.RH_REGISTRY_USERNAME }}
           RH_REGISTRY_PASSWORD: ${{ secrets.RH_REGISTRY_PASSWORD }}
           REGISTRY_AUTH_FILE: /tmp/skopeo-auth
-        run: ./verify-catalog.sh
+        run: ./util/verify-catalog.sh

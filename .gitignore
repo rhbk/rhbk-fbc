@@ -1,4 +1,5 @@
 *.swp
 /bin/
 /workdir/
+/util
 /verified_coordinates
