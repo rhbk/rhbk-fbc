@@ -1,0 +1,15 @@
+on:
+  create:
+    branches:
+      - rhbk/*
+
+jobs:
+  open-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Open Pull Request
+        run: |
+          gh pr create -B main -H "$HEAD" --fill
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD: ${{ github.event.ref }}
