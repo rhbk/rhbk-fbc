@@ -15,5 +15,5 @@ jobs:
         run: |
           gh pr create -B main -H "$HEAD" --fill
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.REPO_SCOPED_TOKEN }}
           HEAD: ${{ github.event.ref }}
