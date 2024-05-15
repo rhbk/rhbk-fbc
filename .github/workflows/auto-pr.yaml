@@ -1,15 +1,17 @@
-on:
-  create:
-    branches:
-      - rhbk/*
+on: create
 
 jobs:
   open-pr:
+    if: ${{ startsWith(github.ref, 'refs/heads/rhbk/') }}
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Open Pull Request
         run: |
           gh pr create -B main -H "$HEAD" --fill
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.REPO_SCOPED_TOKEN }}
           HEAD: ${{ github.event.ref }}
