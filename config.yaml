@@ -4,6 +4,8 @@ konflux:
   namespace: rhbk-release
   prefix: rhbk-fbc
   github: rhbk/rhbk-fbc
+upgrade:
+  between_major: skipRange
 ocp:
   - v4.11
   - v4.12
