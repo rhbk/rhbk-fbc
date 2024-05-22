@@ -22,10 +22,10 @@ schema: olm.channel
 ---
 entries:
   - name: rhbk-operator.v24.0.3-opr.1
-    skipRange: '>=22.0.6-opr.1 <24.0.3-opr.1'
   - name: rhbk-operator.v24.0.4-opr.1
     skips:
       - rhbk-operator.v24.0.3-opr.1
+    skipRange: '>=22.0.6-opr.1 <24.0.3-opr.1'
 name: stable-v24
 package: rhbk-operator
 schema: olm.channel
