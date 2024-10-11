@@ -184,7 +184,7 @@ spec:
             - name: name
               value: buildah
             - name: bundle
-              value: quay.io/redhat-appstudio-tekton-catalog/task-buildah:0.2@sha256:58729fd1b6e4bc3631d602c69e60b5dcbb4265b6cbf5defad3d7f91342418617
+              value: quay.io/redhat-appstudio-tekton-catalog/task-buildah:0.2@sha256:43c31ce835f260d11d9b263c3a1fff4c1dcbcfed0e608d36d8752e095d8d9906
             - name: kind
               value: task
           resolver: bundles
@@ -285,7 +285,7 @@ spec:
             - name: name
               value: fbc-validation
             - name: bundle
-              value: quay.io/redhat-appstudio-tekton-catalog/task-fbc-validation:0.1@sha256:0c7c2197d037cfcba9654582c0bbd98d6983c7ed65ce3d83f82b7229533b85f2
+              value: quay.io/redhat-appstudio-tekton-catalog/task-fbc-validation:0.1@sha256:f4d2616c0acd0253997771970b90dcfa59cc80712aacafc3a44f6cb6fe2a049c
             - name: kind
               value: task
           resolver: bundles
