@@ -248,7 +248,7 @@ spec:
             operator: in
             values:
               - "false"
-      - name: inspect-image
+      - name: validate-fbc
         params:
           - name: IMAGE_URL
             value: $(tasks.build-container.results.IMAGE_URL)
@@ -259,9 +259,9 @@ spec:
         taskRef:
           params:
             - name: name
-              value: inspect-image
+              value: validate-fbc
             - name: bundle
-              value: quay.io/redhat-appstudio-tekton-catalog/task-inspect-image:0.2@sha256:382b85c31d6beecfe7d7abebb5d192473f8e49d43cc7a3463550b67d938ac1ac
+              value: quay.io/konflux-ci/tekton-catalog/task-validate-fbc:0.1@sha256:4348a28a109daeab3af9515120e6332eb3c2af2020b96a54afc2365b6c7703ed
             - name: kind
               value: task
           resolver: bundles
@@ -270,56 +270,6 @@ spec:
             operator: in
             values:
               - "false"
-        workspaces:
-          - name: source
-            workspace: workspace
-      - name: fbc-validate
-        params:
-          - name: IMAGE_URL
-            value: $(tasks.build-container.results.IMAGE_URL)
-          - name: IMAGE_DIGEST
-            value: $(tasks.build-container.results.IMAGE_DIGEST)
-          - name: BASE_IMAGE
-            value: $(tasks.inspect-image.results.BASE_IMAGE)
-        runAfter:
-          - inspect-image
-        taskRef:
-          params:
-            - name: name
-              value: fbc-validation
-            - name: bundle
-              value: quay.io/redhat-appstudio-tekton-catalog/task-fbc-validation:0.2@sha256:52f2f7e1be31b8fd938b1337fbe562df29f3c1ab02ff1feead07b9f9fbd9aa43
-            - name: kind
-              value: task
-          resolver: bundles
-        when:
-          - input: $(params.skip-checks)
-            operator: in
-            values:
-              - "false"
-        workspaces:
-          - name: workspace
-            workspace: workspace
-      - name: fbc-related-image-check
-        runAfter:
-          - fbc-validate
-        taskRef:
-          params:
-            - name: name
-              value: fbc-related-image-check
-            - name: bundle
-              value: quay.io/redhat-appstudio-tekton-catalog/task-fbc-related-image-check:0.2@sha256:c33d0f241b927cbe43490785722158d8d5650cc9a7ca77929f4ce88c77d5c3f2
-            - name: kind
-              value: task
-          resolver: bundles
-        when:
-          - input: $(params.skip-checks)
-            operator: in
-            values:
-              - "false"
-        workspaces:
-          - name: workspace
-            workspace: workspace
     workspaces:
       - name: workspace
       - name: git-auth
