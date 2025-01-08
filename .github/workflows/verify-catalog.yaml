@@ -22,8 +22,9 @@ jobs:
 
       - name: Install Packages
         run: |
-          sudo add-apt-repository ppa:rmescandon/yq
-          sudo apt install yq jq skopeo -y
+          sudo apt install jq skopeo -y
+          sudo curl -fLo /usr/bin/yq https://github.com/mikefarah/yq/releases/download/v4.44.6/yq_linux_amd64
+          sudo chmod +x /usr/bin/yq
 
       - name: Cache Verified Image Coordinates
         id: cache-coords
