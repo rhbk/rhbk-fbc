@@ -59,7 +59,7 @@ spec:
             - name: name
               value: summary
             - name: bundle
-              value: quay.io/redhat-appstudio-tekton-catalog/task-summary:0.2@sha256:ac5b078500566c204eaa23e3aea1e2f7e003ac750514198419cb322a2eaf177a
+              value: quay.io/redhat-appstudio-tekton-catalog/task-summary:0.2@sha256:716d50d6f79c119e729a41ddf4eca7ddc521dbfb32cc10c7e1ef1942da887e26
             - name: kind
               value: task
           resolver: bundles
@@ -136,7 +136,7 @@ spec:
             - name: name
               value: init
             - name: bundle
-              value: quay.io/redhat-appstudio-tekton-catalog/task-init:0.2@sha256:07b8eb6a9533525a397c296246d3eb6ec4771b520a1bfee817ce2b7ede25c43d
+              value: quay.io/redhat-appstudio-tekton-catalog/task-init:0.2@sha256:ad2c6461433b867a5b8c5243048014f71295f4f7b0b684e6289246e37f698204
             - name: kind
               value: task
           resolver: bundles
@@ -187,7 +187,7 @@ spec:
             - name: name
               value: buildah
             - name: bundle
-              value: quay.io/redhat-appstudio-tekton-catalog/task-buildah:0.2@sha256:82da08d376788375ec3598c0afe85be25220824f9046d10b691ca11d9aca2c0b
+              value: quay.io/redhat-appstudio-tekton-catalog/task-buildah:0.2@sha256:2daae1f22c949594c1284e8ad52d11d361309eb0da87e80db9c2953277f7c561
             - name: kind
               value: task
           resolver: bundles
@@ -210,7 +210,7 @@ spec:
             - name: name
               value: source-build
             - name: bundle
-              value: quay.io/redhat-appstudio-tekton-catalog/task-source-build:0.1@sha256:c07c3f9813e87832468fc72912c6e8ef995a442a32248cc35d77b8c0f5e516e2
+              value: quay.io/redhat-appstudio-tekton-catalog/task-source-build:0.1@sha256:67554fe0d804396b373ed0be25ea432f8de02b2af6100e39d998783ac0bebe5c
             - name: kind
               value: task
           resolver: bundles
@@ -239,7 +239,7 @@ spec:
             - name: name
               value: deprecated-image-check
             - name: bundle
-              value: quay.io/redhat-appstudio-tekton-catalog/task-deprecated-image-check:0.4@sha256:566ae0df80f8447558595a996627bf0b5482dc0eaa9fbc33b8154587aed51a05
+              value: quay.io/redhat-appstudio-tekton-catalog/task-deprecated-image-check:0.4@sha256:0ad98ffb3409f87f94ac7608838a142fed3eace02d7b815c0c63f4232b988e1a
             - name: kind
               value: task
           resolver: bundles
@@ -248,7 +248,7 @@ spec:
             operator: in
             values:
               - "false"
-      - name: inspect-image
+      - name: validate-fbc
         params:
           - name: IMAGE_URL
             value: $(tasks.build-container.results.IMAGE_URL)
@@ -259,9 +259,9 @@ spec:
         taskRef:
           params:
             - name: name
-              value: inspect-image
+              value: validate-fbc
             - name: bundle
-              value: quay.io/redhat-appstudio-tekton-catalog/task-inspect-image:0.1@sha256:242726382cb5331e5eb35f90d1249c0e61400b47d0cc67c3a30dba372f21b4c7
+              value: quay.io/konflux-ci/tekton-catalog/task-validate-fbc:0.1@sha256:4348a28a109daeab3af9515120e6332eb3c2af2020b96a54afc2365b6c7703ed
             - name: kind
               value: task
           resolver: bundles
@@ -270,56 +270,6 @@ spec:
             operator: in
             values:
               - "false"
-        workspaces:
-          - name: source
-            workspace: workspace
-      - name: fbc-validate
-        params:
-          - name: IMAGE_URL
-            value: $(tasks.build-container.results.IMAGE_URL)
-          - name: IMAGE_DIGEST
-            value: $(tasks.build-container.results.IMAGE_DIGEST)
-          - name: BASE_IMAGE
-            value: $(tasks.inspect-image.results.BASE_IMAGE)
-        runAfter:
-          - inspect-image
-        taskRef:
-          params:
-            - name: name
-              value: fbc-validation
-            - name: bundle
-              value: quay.io/redhat-appstudio-tekton-catalog/task-fbc-validation:0.1@sha256:ef205a3bc81c3eb37af969541d89980a3ddb778ff9fa52d7a655e4d9f91df8e8
-            - name: kind
-              value: task
-          resolver: bundles
-        when:
-          - input: $(params.skip-checks)
-            operator: in
-            values:
-              - "false"
-        workspaces:
-          - name: workspace
-            workspace: workspace
-      - name: fbc-related-image-check
-        runAfter:
-          - fbc-validate
-        taskRef:
-          params:
-            - name: name
-              value: fbc-related-image-check
-            - name: bundle
-              value: quay.io/redhat-appstudio-tekton-catalog/task-fbc-related-image-check:0.1@sha256:372fc27c9b113082b7534863cd5108e406a4cfd1e347e24e85e4f9479a2ac29b
-            - name: kind
-              value: task
-          resolver: bundles
-        when:
-          - input: $(params.skip-checks)
-            operator: in
-            values:
-              - "false"
-        workspaces:
-          - name: workspace
-            workspace: workspace
     workspaces:
       - name: workspace
       - name: git-auth
