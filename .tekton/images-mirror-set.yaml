@@ -1,10 +1,15 @@
----
 apiVersion: operator.openshift.io/v1alpha1
 kind: ImageDigestMirrorSet
 metadata:
-  name: example-mirror-set
+  name: rhbk-mirror-set
 spec:
   imageDigestMirrors:
     - mirrors:
-        - quay.io/my-namespace/valid-repo
-      source: registry.redhat.io/unreleased-image/or-inaccessible-image
+        - brew.registry.redhat.io/rh-osbs/keycloak-rhbk-rhel9-operator-bundle
+      source: registry.redhat.io/rhbk/keycloak-operator-bundle
+    - mirrors:
+        - brew.registry.redhat.io/rh-osbs/keycloak-rhbk-rhel9-operator
+      source: registry.redhat.io/rhbk/keycloak-rhel9-operator
+    - mirrors:
+        - brew.registry.redhat.io/rh-osbs/keycloak-rhbk-openshift-rhel9
+      source: registry.redhat.io/rhbk/keycloak-rhel9
