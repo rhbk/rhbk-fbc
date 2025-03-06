@@ -186,7 +186,7 @@ properties:
           ]
         capabilities: Deep Insights
         categories: Security
-        certified: "false"
+        certified: 'false'
         containerImage: registry.redhat.io/rhbk/keycloak-rhel9-operator@sha256:3747b43fed8cfc0e9be3ef93054ad28aa6ecab3bde01ea745a4af4b5e096e599
         createdAt: "2024-04-10T19:14:54Z"
         description: An Operator for installing and managing Keycloak
