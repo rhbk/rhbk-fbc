@@ -37,7 +37,7 @@ spec:
             - name: name
               value: show-sbom
             - name: bundle
-              value: quay.io/redhat-appstudio-tekton-catalog/task-show-sbom:0.1@sha256:1fa4b71e0e0ca51da1cb769a2e20bbf186235e36b03cd97998e042e6e15a0c67
+              value: quay.io/redhat-appstudio-tekton-catalog/task-show-sbom:0.1@sha256:9ad5b3434427f03c4d105b646a35a506589dd9eb4620c76579659ac3358b6e6a
             - name: kind
               value: task
           resolver: bundles
@@ -133,7 +133,7 @@ spec:
             - name: name
               value: init
             - name: bundle
-              value: quay.io/redhat-appstudio-tekton-catalog/task-init:0.2@sha256:ecec49de014d480e85a01b4351d7e20d9d9df44788758796da785e5be6da8881
+              value: quay.io/redhat-appstudio-tekton-catalog/task-init:0.2@sha256:6f2c677333af4fab7058bd5b54ed57f05be9373ab3285fefeba696bf8a494770
             - name: kind
               value: task
           resolver: bundles
@@ -184,7 +184,7 @@ spec:
             - name: name
               value: buildah
             - name: bundle
-              value: quay.io/redhat-appstudio-tekton-catalog/task-buildah:0.4@sha256:d8b81c27dd50e936c8140ef8225d814954f0b4fc11c1c23a0e5841af0a0cd168
+              value: quay.io/redhat-appstudio-tekton-catalog/task-buildah:0.4@sha256:4d3ef86f723123af67463a2f4b8371496ef69bf9315ac6d6d955bf7ee5f33907
             - name: kind
               value: task
           resolver: bundles
@@ -199,7 +199,9 @@ spec:
       - name: build-source-image
         params:
           - name: BINARY_IMAGE
-            value: $(params.output-image)
+            value: $(tasks.build-container.results.IMAGE_URL)
+          - name: BINARY_IMAGE_DIGEST
+            value: $(tasks.build-container.results.IMAGE_DIGEST)
         runAfter:
           - build-container
         taskRef:
@@ -207,7 +209,7 @@ spec:
             - name: name
               value: source-build
             - name: bundle
-              value: quay.io/redhat-appstudio-tekton-catalog/task-source-build:0.2@sha256:104c05c9e00bd980352cfeae2ebb1551ae36502614c9b843b005291681b9d5a4
+              value: quay.io/redhat-appstudio-tekton-catalog/task-source-build:0.3@sha256:fb93b64cbd13cf9c946e5326b68394f3350893176bd8b5e8a1fafc6ae1e36dfa
             - name: kind
               value: task
           resolver: bundles
@@ -283,7 +285,7 @@ spec:
             - name: name
               value: validate-fbc
             - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-validate-fbc:0.1@sha256:cf1e41bc38f6e7ae7094b2a2501eedca374f7e1d8a4c49a2fd027c2a6277e1c0
+              value: quay.io/konflux-ci/tekton-catalog/task-validate-fbc:0.1@sha256:5ad28ce898a5b4bcaaf3b17d80f30fb377e7229f43219076bb2579c52e241bdb
             - name: kind
               value: task
           resolver: bundles
@@ -309,7 +311,7 @@ spec:
             - name: name
               value: fbc-target-index-pruning-check
             - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-fbc-target-index-pruning-check:0.1@sha256:8c248084b0329fbde6f0acbaf2f0f9f78e2f45ec02e5dcdfdf674e6e98594254
+              value: quay.io/konflux-ci/tekton-catalog/task-fbc-target-index-pruning-check:0.1@sha256:6f1d1edb746a7b20ad4fe523344c5515a259403b8314f5208d96ea0c6ec06169
             - name: kind
               value: task
           resolver: bundles
