@@ -18,6 +18,7 @@ ocp:
   - v4.19
   - v4.20
   - v4.21
+  - v4.22
 replacements:
   - from: brew.registry.redhat.io/rh-osbs/keycloak-rhbk-rhel9-operator-bundle
     to: registry.redhat.io/rhbk/keycloak-operator-bundle
