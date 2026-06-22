@@ -22,6 +22,8 @@ spec:
       value: '{{source_url}}'
     - name: output-image
       value: quay.io/redhat-user-workloads/rhbk-release-tenant/rhbk-fbc-v4-14/rhbk-fbc-component-v4-14:{{revision}}
+    - name: output-image-real
+      value: quay.io/redhat-user-workloads/rhbk-release-tenant/rhbk-fbc-v4-14/rhbk-fbc-component-v4-14:{{revision}}
     - name: path-context
       value: catalog/v4.14
     - name: revision

@@ -22,6 +22,8 @@ spec:
       value: '{{revision}}'
     - name: output-image
       value: quay.io/redhat-user-workloads/rhbk-release-tenant/rhbk-fbc-component-v4-19:{{revision}}
+    - name: output-image-real
+      value: quay.io/redhat-user-workloads/rhbk-release-tenant/rhbk-fbc-component-v4-19:{{revision}}
     - name: path-context
       value: catalog/v4.19
     - name: dockerfile
