@@ -23,6 +23,8 @@ spec:
       value: '{{revision}}'
     - name: output-image
       value: quay.io/redhat-user-workloads/rhbk-release-tenant/rhbk-fbc-component-v4-20:on-pr-{{revision}}
+    - name: output-image-real
+      value: quay.io/redhat-user-workloads/rhbk-release-tenant/rhbk-fbc-component-v4-20:on-pr-{{revision}}
     - name: image-expires-after
       value: 14d
     - name: path-context
