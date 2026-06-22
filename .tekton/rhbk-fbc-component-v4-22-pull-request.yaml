@@ -22,7 +22,7 @@ spec:
     - name: revision
       value: '{{revision}}'
     - name: output-image
-      value: quay.io/redhat-user-workloads/rhbk-release-tenant/rhbk-fbc-component-v4-22:on-pr-{{revision}}
+      value: image-rbac-proxy.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/redhat-user-workloads/rhbk-release-tenant/rhbk-fbc-component-v4-22:on-pr-{{revision}}
     - name: image-expires-after
       value: 14d
     - name: path-context
