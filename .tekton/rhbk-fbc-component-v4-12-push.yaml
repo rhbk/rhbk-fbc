@@ -58,7 +58,7 @@ spec:
             - name: name
               value: summary
             - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-summary:0.2@sha256:e1b8e42962b0c6d9ebe95f3709c34ae5e1569b73941a79654248e0af55eb3ff9
+              value: quay.io/konflux-ci/tekton-catalog/task-summary:0.2@sha256:a009e5892e0ef23f8c45fe98a96d6c56aff3bdc0343d994f30661e56ff901253
             - name: kind
               value: task
           resolver: bundles
@@ -176,7 +176,7 @@ spec:
             - name: name
               value: buildah
             - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-buildah:0.9@sha256:3fc80805977ca958b632dd4750847d0e71e943a7795d07359bdc64ec95a74f74
+              value: quay.io/konflux-ci/tekton-catalog/task-buildah:0.10@sha256:d58ca8db7a349c47baffd7ccdd44c108448e2339340952238fd8265248a3bb2d
             - name: kind
               value: task
           resolver: bundles
@@ -221,7 +221,7 @@ spec:
             - name: name
               value: fbc-fips-check
             - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-fbc-fips-check:0.1@sha256:c4eb011425a1fa77e0724df9a1a8340bd8e59855384f226b8fb6fc11e8d45fdb
+              value: quay.io/konflux-ci/tekton-catalog/task-fbc-fips-check:0.1@sha256:8e995030aa8113e15e1d1d4f1628cb57b309d87e306b0aa6b9c5bca836520d59
             - name: kind
               value: task
           resolver: bundles
