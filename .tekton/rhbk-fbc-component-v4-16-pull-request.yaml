@@ -32,42 +32,6 @@ spec:
     - name: dockerfile
       value: catalog/v4.16/Dockerfile
   pipelineSpec:
-    finally:
-      - name: show-sbom
-        params:
-          - name: IMAGE_URL
-            value: $(tasks.build-container.results.IMAGE_URL)
-        taskRef:
-          params:
-            - name: name
-              value: show-sbom
-            - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-show-sbom:0.1@sha256:a7346ed61237db4f82ff782e0c9e8b30536e0e67b907ad600341a6d192e80012
-            - name: kind
-              value: task
-          resolver: bundles
-      - name: show-summary
-        params:
-          - name: pipelinerun-name
-            value: $(context.pipelineRun.name)
-          - name: git-url
-            value: $(tasks.clone-repository.results.url)?rev=$(tasks.clone-repository.results.commit)
-          - name: image-url
-            value: $(params.output-image)
-          - name: build-task-status
-            value: $(tasks.build-container.status)
-        taskRef:
-          params:
-            - name: name
-              value: summary
-            - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-summary:0.2@sha256:a009e5892e0ef23f8c45fe98a96d6c56aff3bdc0343d994f30661e56ff901253
-            - name: kind
-              value: task
-          resolver: bundles
-        workspaces:
-          - name: workspace
-            workspace: workspace
     params:
       - description: Source Repository URL
         name: git-url
@@ -114,6 +78,18 @@ spec:
         default: oci
         type: string
         description: The format for the resulting image's mediaType. Valid values are oci or docker.
+      - name: source-date-epoch
+        type: string
+        default: ''
+        description: Sets the image created time and the SOURCE_DATE_EPOCH build argument. On its own, it does not change file timestamps inside the layers (set rewrite-timestamp to "true" for that). Leave empty to keep the actual build time.
+      - name: rewrite-timestamp
+        type: string
+        default: 'false'
+        description: When "true", clamp file modification times in the image layers to at most source-date-epoch. Does nothing unless source-date-epoch is set.
+      - name: omit-history
+        type: string
+        default: 'false'
+        description: When "true", omit the build history (history timestamps, layer metadata, etc.) from the resulting image.
     results:
       - description: ""
         name: IMAGE_URL
@@ -134,7 +110,7 @@ spec:
             - name: name
               value: init
             - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-init:0.4@sha256:5a423246792ac501ea279229b42ee57da9927da441c04b5c9ff86817b0856b08
+              value: quay.io/konflux-ci/tekton-catalog/task-init:0.4.3@sha256:15d3d4a7e5c70b068103a9d4c6ba2e049db8896709fc45c0bd4be49c134b0989
             - name: kind
               value: task
           resolver: bundles
@@ -151,7 +127,7 @@ spec:
             - name: name
               value: git-clone
             - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-git-clone:0.1@sha256:fedaacbf05ff7b2cdd36bff6cb1f103755cb5dc0b4adc0540136d3606ade18a5
+              value: quay.io/konflux-ci/tekton-catalog/task-git-clone:0.2.5@sha256:39e16e40a77b5af3d7685e129c8281c55a15889d19db1abddacbedd99e46cc5d
             - name: kind
               value: task
           resolver: bundles
@@ -176,6 +152,12 @@ spec:
             value: $(tasks.clone-repository.results.commit)
           - name: BUILDAH_FORMAT
             value: $(params.buildah-format)
+          - name: SOURCE_DATE_EPOCH
+            value: $(params.source-date-epoch)
+          - name: REWRITE_TIMESTAMP
+            value: $(params.rewrite-timestamp)
+          - name: OMIT_HISTORY
+            value: $(params.omit-history)
         runAfter:
           - clone-repository
         taskRef:
@@ -183,7 +165,7 @@ spec:
             - name: name
               value: buildah
             - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-buildah:0.10@sha256:d58ca8db7a349c47baffd7ccdd44c108448e2339340952238fd8265248a3bb2d
+              value: quay.io/konflux-ci/tekton-catalog/task-buildah:0.11.0@sha256:3002e6faa952d3599c36c54fb04bf0e547fad3c1f675acee5abb018b3ea756d4
             - name: kind
               value: task
           resolver: bundles
@@ -203,7 +185,7 @@ spec:
             - name: name
               value: fbc-fips-check
             - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-fbc-fips-check:0.1@sha256:8e995030aa8113e15e1d1d4f1628cb57b309d87e306b0aa6b9c5bca836520d59
+              value: quay.io/konflux-ci/tekton-catalog/task-fbc-fips-check:0.1@sha256:0bb74020e210649b1db9c4bb1399af29ca8d980cdf2fe681f7eda5ee2acd2573
             - name: kind
               value: task
           resolver: bundles
@@ -228,7 +210,7 @@ spec:
             - name: name
               value: deprecated-image-check
             - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-deprecated-image-check:0.5@sha256:e78d0d3baf3c8cfc1a5ad278196b74032d9568b143a87c7a79ab780fedfb296e
+              value: quay.io/konflux-ci/tekton-catalog/task-deprecated-image-check:0.5@sha256:0ccc688a77e9b7b0b8973c132a1e840844137e77f887be4a0bec8893b0776872
             - name: kind
               value: task
           resolver: bundles
@@ -250,7 +232,7 @@ spec:
             - name: name
               value: apply-tags
             - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-apply-tags:0.3@sha256:a291081de7fb27f832c6fc3c4b078acf7e6162ca4c085db38b118ca87e8b5b66
+              value: quay.io/konflux-ci/tekton-catalog/task-apply-tags:0.3@sha256:da0cff2a36f07087798cd5f577b15f3d9e6dd4d3d08956227b298362e08ecc37
             - name: kind
               value: task
           resolver: bundles
@@ -271,7 +253,7 @@ spec:
             - name: name
               value: push-dockerfile
             - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-push-dockerfile:0.3@sha256:359199272c9a403275162a6741d098d7987334232630b59093d781c743fa99e7
+              value: quay.io/konflux-ci/tekton-catalog/task-push-dockerfile:0.3.1@sha256:408b73a922df8912c087ee335810aa66c4abf7d2ee8bd2082ff2a98748736841
             - name: kind
               value: task
           resolver: bundles
@@ -291,7 +273,7 @@ spec:
             - name: name
               value: validate-fbc
             - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-validate-fbc:0.1@sha256:1775e829842cbabe3537a543544bc1c3a39de114f5657462f436c09194250b5a
+              value: quay.io/konflux-ci/tekton-catalog/task-validate-fbc:0.3@sha256:5ac2ab06fa8b7b7dfaa7a57cf68d3dd8de3fa9c7d6ebaef17626509c45f234a3
             - name: kind
               value: task
           resolver: bundles
