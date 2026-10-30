@@ -121,23 +121,48 @@ spec:
           - name: url
             value: $(params.git-url)
           - name: revision
-            value: $(params.revision)
+            value: $(params.revision)    
+          - name: ociStorage
+            value: $(params.output-image).git
+          - name: ociArtifactExpiresAfter
+            value: $(params.image-expires-after)
         runAfter:
           - init
         taskRef:
           params:
             - name: name
-              value: git-clone
+              value: git-clone-oci-ta
             - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-git-clone:0.2.6@sha256:7d5d1ae4cf78c6892cfba764602f9439bc5017c7254a7bb074e598e66916cfb9
+              value: quay.io/konflux-ci/tekton-catalog/task-git-clone-oci-ta:0.2.6@sha256:b3c05f2aab54b5b6d7e9b5a95931b2c6602574604842a4c430fdb3fbc3fb9fcb
             - name: kind
               value: task
           resolver: bundles
         workspaces:
-          - name: output
-            workspace: workspace
           - name: basic-auth
             workspace: git-auth
+      - name: fbc-inject-lifecycle
+        params:
+        - name: SOURCE_ARTIFACT
+          value: $(tasks.clone-repository.results.SOURCE_ARTIFACT)
+        - name: ociStorage
+          value: $(params.output-image).lifecycle
+        - name: ociArtifactExpiresAfter
+          value: $(params.image-expires-after)
+        - name: CONTEXT
+          value: $(params.path-context)
+        - name: DOCKERFILE
+          value: $(params.dockerfile)
+        runAfter:
+        - clone-repository
+        taskRef:
+          params:
+          - name: name
+            value: fbc-inject-lifecycle-oci-ta
+          - name: bundle
+            value: quay.io/konflux-ci/tekton-catalog/task-fbc-inject-lifecycle-oci-ta:0.1@sha256:2fdc2361adc3c09c20600a436a7d4191e8b67618e07fe9d8710dbff27e9b0272
+          - name: kind
+            value: task
+          resolver: bundles
       - name: build-container
         params:
           - name: IMAGE
@@ -160,20 +185,19 @@ spec:
             value: $(params.rewrite-timestamp)
           - name: OMIT_HISTORY
             value: $(params.omit-history)
+          - name: SOURCE_ARTIFACT
+            value: $(tasks.fbc-inject-lifecycle.results.SOURCE_ARTIFACT)
         runAfter:
-          - clone-repository
+          - fbc-inject-lifecycle
         taskRef:
           params:
             - name: name
-              value: buildah
+              value: buildah-oci-ta
             - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-buildah:0.12.0@sha256:19fcabb2afd9d8ce7ca10e980b21cfd9a5443266d6a185fdb6b49b1f01475e44
+              value: quay.io/konflux-ci/tekton-catalog/task-buildah-oci-ta:0.12.0@sha256:cf32941c77e413818c4ef6b78c2a88d6e6ddc21729767d8f4d316cd293e4a15d
             - name: kind
               value: task
           resolver: bundles
-        workspaces:
-          - name: source
-            workspace: workspace
       - name: build-image-index
         params:
           - name: IMAGE
@@ -202,14 +226,16 @@ spec:
             value: $(tasks.build-image-index.results.IMAGE_DIGEST)
           - name: image-url
             value: $(tasks.build-image-index.results.IMAGE_URL)
+          - name: SOURCE_ARTIFACT
+            value: $(tasks.fbc-inject-lifecycle.results.SOURCE_ARTIFACT)
         runAfter:
           - build-image-index
         taskRef:
           params:
             - name: name
-              value: fbc-fips-check
+              value: fbc-fips-check-oci-ta
             - name: bundle
-              value: quay.io/konflux-ci/tekton-catalog/task-fbc-fips-check:0.1@sha256:0bb74020e210649b1db9c4bb1399af29ca8d980cdf2fe681f7eda5ee2acd2573
+              value: quay.io/konflux-ci/tekton-catalog/task-fbc-fips-check-oci-ta:0.1@sha256:24d0d8b423ddd9b023abedd745e34e5e3e747890784527983794f981811d97e3
             - name: kind
               value: task
           resolver: bundles
@@ -218,9 +244,6 @@ spec:
             operator: in
             values:
               - "false"
-        workspaces:
-          - name: workspace
-            workspace: workspace
       - name: deprecated-base-image-check
         params:
           - name: IMAGE_URL
@@ -331,7 +354,6 @@ spec:
             values:
               - "false"
     workspaces:
-      - name: workspace
       - name: git-auth
         optional: true
       - name: netrc
@@ -339,17 +361,6 @@ spec:
   taskRunTemplate:
     serviceAccountName: build-pipeline-rhbk-fbc-component-v4-17
   workspaces:
-    - name: workspace
-      volumeClaimTemplate:
-        metadata:
-          creationTimestamp:
-        spec:
-          accessModes:
-            - ReadWriteOnce
-          resources:
-            requests:
-              storage: 1Gi
-        status: {}
     - name: git-auth
       secret:
         secretName: '{{ git_auth_secret }}'
