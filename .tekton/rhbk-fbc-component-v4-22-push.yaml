@@ -23,7 +23,7 @@ spec:
     - name: output-image
       value: quay.io/redhat-user-workloads/rhbk-release-tenant/rhbk-fbc-component-v4-22:{{revision}}
     - name: output-image-real
-      value: image-rbac-proxy.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/redhat-user-workloads/rhbk-release-tenant/rhbk-fbc-component-v4-22:on-pr-{{revision}}
+      value: quay.io/redhat-user-workloads/rhbk-release-tenant/rhbk-fbc-component-v4-22:{{revision}}
     - name: path-context
       value: catalog/v4.22
     - name: dockerfile
